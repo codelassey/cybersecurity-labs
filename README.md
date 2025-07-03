@@ -1,15 +1,11 @@
 ## About This Repository
-This repository contains structured labs from my cybersecurity learning journey, including labs from Cisco especially, and other platforms like TryHackMe, etc.
-
-## Contents
-- Cisco Labs
-
+I'm actively retaking and documenting labs here. This repository contains structured labs from my cybersecurity learning journey, including labs from Cisco especially, and other platforms like TryHackMe, etc.
 
 ## Status
 > **Labs are being uploaded gradually.**
 
 ## How to Use
-Navigate through folders based on the module.
+Navigate through the folders. The folder names represent the module. 
 
 
 
