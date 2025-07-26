@@ -8,7 +8,7 @@
 
 In this lab, a python script will be used to set up and configure the
 devices shown in the figure above. I will then have access to four
-hosts, a switch, and a router inside your one VM. This will allow me to
+hosts, a switch, and a router all inside the same VM. This will allow me to
 simulate a variety of network protocols and services without having to
 configure a physical network of devices.
 
