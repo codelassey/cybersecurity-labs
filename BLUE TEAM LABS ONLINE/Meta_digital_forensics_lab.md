@@ -31,7 +31,7 @@ NOTE : It is not intentional not to add screenshots but I wanted to document jus
 
 ### Step 1: Extracting the Lab Files
 I downloaded and unzipped a file containing **two images**. I analyzed each of the images individually.
-- unploaded_1.jpg
+- uploaded_1.jpg
 - uploaded_2.png
 
 ### Step 2: Basic Image Information
