@@ -96,7 +96,7 @@ scanme.nmap.org** and some observations made were as follows:
 Ports 21,22,80,587,9929 & 31337 were open software OpenSSH 6.6.1p1
 Ubuntu 2ubuntu2.13 running the ssh service.
 
-![map](nmap/media/image12.png)
+![map](media/nmap/image12.png)
 
 # Reflection
 ---
