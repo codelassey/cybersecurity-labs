@@ -5,7 +5,7 @@ I'm actively retaking and documenting labs here. This repository contains struct
 > **Labs are being uploaded gradually!**
 
 ## How to Use
-Navigate through the folders. The folder names represent the module. 
+Navigate through the folders. The folder names represent the module for the Cisco Labs but for the other platforms like Blue Team Labs Online and LetsDefend, those folders contains the labs I take from those platforms respectively.
 
 
 
