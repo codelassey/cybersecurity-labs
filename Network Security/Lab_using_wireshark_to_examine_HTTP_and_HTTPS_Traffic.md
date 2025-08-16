@@ -107,7 +107,7 @@ not in plain text.
 
 ![https](media/http_https/image15.png)
 
-![https](media/http_httpsimage16.png)
+![https](media/http_https/image16.png)
 
 
 # REFLECTION
