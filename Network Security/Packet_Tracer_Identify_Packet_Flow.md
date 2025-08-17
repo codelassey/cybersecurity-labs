@@ -170,3 +170,5 @@ and entered www.web.pka as the URL. Click **Go**. I then captured the
 patch taken by packets to load the web page. I compared
 the **tracert** results to the simulation results for the HTTP packets
 and saw that it was the same path.
+
+![completion](media/packet_path/Screenshot.png)
