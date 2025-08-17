@@ -107,7 +107,7 @@ a broken link in the LAN, the path changed just as observed earlier.
 
 ### Step 1: PC0 to websites.
 
-I switched to Real time mode (Shift + R) and I remove the link between
+I switched to Real time mode (Shift + R) and I removed the link between
 Router4 and Router2 from the topology to simulate an inaccessible path.
 The routers are using Enhanced Interior Gateway Routing Protocol (EIGRP)
 to dynamically adjust routing tables to account for the deleted link.
