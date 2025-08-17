@@ -101,4 +101,4 @@ be used to remove the ACL.
 Next, I verified that **PC1** could now ping the **DNS
 Server **and** PC4**. It worked!
 
-![2step2](packet_acl/media/image7.png)
+![2step2](media/packet_acl/image7.png)
