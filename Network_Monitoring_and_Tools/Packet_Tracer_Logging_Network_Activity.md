@@ -3,7 +3,7 @@
 ## Setup
 
 ![net_logging](media/pt_log_net_act/image1.png)
-![net_logging](pt_log_net_act/media/image2.png)
+![net_logging](media/pt_log_net_act/image2.png)
 
 ## Objectives
 
@@ -154,4 +154,4 @@ A ping to Router2 from PC-C will have the destination address for PC-C
 (LAN address) because PC-C is on Router2's side and there would be no
 need for NAT through Router1.
 
-![net_logging](pt_log_net_act/media/image22.png)
+![net_logging](media/pt_log_net_act/image22.png)
