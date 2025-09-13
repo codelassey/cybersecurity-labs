@@ -48,4 +48,4 @@ Organizations must follow external regulations and ethical codes, especially con
 
 Below contains detailed templates I added to help me creating robust policies based on what I learned in this topic.
 
-[POLICIES](/policy_templates)
+[POLICIES](./policy_templates)
