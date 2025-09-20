@@ -57,7 +57,7 @@ for decryption.
 
 I pasted it into the tool's text box and decrypted the message.
 
-![pasting_encoded_text](CreatingCodes/media/image6.png)
+![pasting_encoded_text](media/CreatingCodes/image6.png)
 
 ## Results
 
