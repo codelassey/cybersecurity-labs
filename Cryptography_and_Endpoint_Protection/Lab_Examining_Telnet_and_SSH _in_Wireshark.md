@@ -46,7 +46,7 @@ display only telnet-related traffic.
 I right-clicked one of the Telnet lines in the Packet list section of
 Wireshark, and from the drop-down list, I selected Follow \> TCP Stream.
 
-![stream](TELSSH/media/image6.png)
+![stream](media/TELSSH/image6.png)
 
 After I had finished reviewing the Telnet session in the Follow TCP
 Stream window, I clicked Close and exited the Telnet session by typing
