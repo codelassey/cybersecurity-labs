@@ -209,4 +209,4 @@ After inspecting the flow record, the IP protocol field had different
 values with value 6 for TCP (the HTTP traffic on TCP port 80) and value
 17 for UDP traffic (DNS query and response)
 
-![finished_activity](Netflow/media/image30.png)
+![finished_activity](media/Netflow/image30.png)
