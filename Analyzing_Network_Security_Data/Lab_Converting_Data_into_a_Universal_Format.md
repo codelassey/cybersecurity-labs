@@ -1,4 +1,4 @@
-# Lab Report: Converting Data into a Universal Format**
+# Lab Report: Converting Data into a Universal Format
 
 ## Objectives
 
