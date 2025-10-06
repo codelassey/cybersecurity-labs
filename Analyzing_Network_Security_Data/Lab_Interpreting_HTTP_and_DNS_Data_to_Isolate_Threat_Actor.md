@@ -35,7 +35,7 @@ I started and logged-in to the Security Onion VM.
 
 I then entered the **sudo so-status** command to check the status of
 services but I realized Kibana failed to start so I restarted the
-services using sudo so-start.
+services using **sudo so-start**.
 
 ![so_start](media/IsolateThreatActor/image3.png)
 ![s0_start](media/IsolateThreatActor/image4.png)
@@ -147,8 +147,8 @@ xxd command.
 After adjusting the time for June 2020, I noticed the total number of
 logs for the entire month of June 2020 was 136. Events count over time
 was also shown and I checked to confirm it was 22 events recorded on
-11^th^ June 00:00, 28 events recorded on 12^th^ June 00:00 and 58 events
-for 12^th^ June 12:00.
+11th June 00:00, 28 events recorded on 12th June 00:00 and 58 events
+for 12th June 12:00.
 
 ![results](media/IsolateThreatActor/image26.png)
 
@@ -164,7 +164,7 @@ logs, viewing the first 10.
 ![first_10](media/IsolateThreatActor/image27.png)
 ![first_10](media/IsolateThreatActor/image12.png)
 
-After expanding the first log, I identified the timestamp to be 12^th^
+After expanding the first log, I identified the timestamp to be 12th
 June 2020 at 21:30:09 and the event type being bro_http.
 
 ![first_log](media/IsolateThreatActor/image28.png)
