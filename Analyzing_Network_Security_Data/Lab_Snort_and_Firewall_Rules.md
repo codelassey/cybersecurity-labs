@@ -215,6 +215,10 @@ server would be a rule to completely block the malicous server IP
 address. This will completely cut access to that server from the
 internal network.
 
+Below shows the snort rule created to trigger the alert.
+
+![snort_rule](media/SnortIptables/image100.png)
+
 ## Reflection
 
 By completing this lab, I understand that, firewalls and Intrusion
