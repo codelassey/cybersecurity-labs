@@ -94,7 +94,7 @@ displayed all HTTP objects present in the TCP flow that contained the
 GET request. In this case, only the W32.Nimda.Amm.exe file waspresent in
 the capture.
 
-![results](MalPCAP/media/image12.png)
+![results](media/MalPCAP/image12.png)
 
 After extracting the maware file and using the file command, I confirmed
 W32.Nimda.Amm.exe was indeed a Windows executable file.
