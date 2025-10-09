@@ -161,5 +161,5 @@ An ethical hacker could use this procedure with a phishing email with a
 very convincing write-up and spoofed sender addresses. The URL links to
 the very familiar login page that was cloned from the real site. From
 there, credentials could be harvested for multiple users. The results of
-this test could then be reported with the mitigation strategiesfor user
+this test could then be reported with the mitigation strategies for user
 training to prevent similar actual attacks.
