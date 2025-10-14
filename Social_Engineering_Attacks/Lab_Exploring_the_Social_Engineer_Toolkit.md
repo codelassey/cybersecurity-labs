@@ -14,7 +14,7 @@ obtain credentials or plant malware to create entry points into the
 target network. One of the tools used to perform these social
 engineering attacks is the Social Engineer Toolkit (SET). In an actual
 penetration test, this procedure could be used to reveal problems with
-user security training and the need take measures to educate users about
+user security training and the need to take measures to educate users about
 various types of phishing attacks.
 
 ## Tools Used
@@ -32,8 +32,7 @@ access. I could also run it through the application tab in the VM.
 ![part_1](media/SET/image1.png)
 ![part1](media/SET/image2.png)
 
-Since I had previously run the tool, I was not presented with the
-license terms and conditions just because I had previously agreed to it.
+Since I had previously run the tool and agreed to the license terms and conditions, I was not presented with it. If lets say anyone reading this lab tries it out for the first time, you would be required to accept the terms and conditions.
 
 ![part1](media/SET/image3.png)
 
@@ -41,6 +40,7 @@ At the SET prompt, I entered **1** and pressed **Enter** to access the
 Social-Engineering Attacks submenu.
 
 ![part1](media/SET/image4.png)
+
 I selected the infectious media generator option to see a brief
 description of the exploit. It facilitates creation of a DVD or USB
 thumb drive that will autorun malicious software when inserted into the
@@ -82,7 +82,7 @@ via Firefox Browser to make sure it was reachable.
 I returned to the terminal session. Selected **2) Site Cloner** from the
 **Credential Harvester Attack Method** menu and entered the IP
 **10.6.6.1** to receive the POST data. This is the IP address of the
-virtual Kali internal interface on the 10.6.6.0/24 network of which the
+virtual Kali internal interface on the **10.6.6.0/24** network of which the
 DVWA server is on. In an actual exploit, this would be the external
 address of the attack computer.
 
@@ -101,7 +101,7 @@ the fake webpage.
 ![part2](media/SET/image12.png)
 ![part2](media/SET/image13.png)
 
-I then double-clicked the html document I created from the desktop
+I double-clicked the html document which I created from the desktop
 screen.
 
 ![part2](media/SET/image14.png)
@@ -111,7 +111,6 @@ password fields. After clicking login, I was now redirected to the
 original site.
 
 ![part2](media/SET/image15.png)
-
 ![part2](media/SET/image16.png)
 
 I then returned to the terminal session that was running the SET
@@ -127,7 +126,7 @@ had exited the SET toolkit.
 
 To view the content of the XML file, I navigated to the
 **/root/.set/reports/ folder.** Earlier on after pressing ctrl + c, I was
-presented with the filename but I forgot to copy it so I check through
+presented with the filename but I forgot to copy it so I checked through
 manually.
 
 ![part2](media/SET/image19.png)
