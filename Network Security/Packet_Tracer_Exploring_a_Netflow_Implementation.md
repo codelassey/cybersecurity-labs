@@ -48,7 +48,7 @@ The first set of pings were not sent to the NetFlow Collector because
 the ARP process must first resolve IP and MAC addresses. After a minute,
 I pinged the default gateway again.
 
-![ping](Netflow/media/image6.png)
+![ping](media/Netflow/image6.png)
 
 Moving on, I pinged the default gateway again but from PC-2 and observed
 the NetFlow collector flow records.
@@ -58,7 +58,7 @@ the NetFlow collector flow records.
 Now, I pinged the default gateway again but from PC-1 and observed the
 NetFlow collector flow records.
 
-![pinging_from_PC1](Netflow/Netflow/image8.png)
+![pinging_from_PC1](media/Netflow/image8.png)
 
 I then issued pings from PC-3 and PC-4 to the default gateway address
 and observed the display in the flow collector.
