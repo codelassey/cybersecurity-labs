@@ -56,8 +56,8 @@ sequences when the inner sequence is stripped.
 ## Results
 I succesfully dumped the contents of the etc/passwd file.
 
-![](Path_Trav3/media/image8.png)
-![](Path_Trav3/media/image9.png)
+![test](media/Path_Trav3/image8.png)
+![test](media/Path_Trav3/image9.png)
 
 ## Reflection
 Through this lab, I was able to read arbitrary files on a server running
