@@ -13,7 +13,7 @@ user-supplied filename before using it.
 - Kali Linux VM
 - Burpsuite
 
-##Methodology
+## Methodology
 
 I opened Burpsuite to intercept the requests with its built in browser.
 
@@ -33,7 +33,7 @@ number of images which perhaps are are stored on disk in the location
 
 I forwarded the request to repeater to observe the result.
 
-![trav3](media/Path_Trav3/Path_Trav3/image4.png)
+![trav3](media/Path_Trav3/image4.png)
 
 The response had a 200 OK HTTP status code which was a clear indication
 that the image loaded succesfully.
@@ -51,7 +51,7 @@ After confirming that the application blocks traversal sequences, I will
 use nested traversal sequences \....//....//....//etc/passwd which will revert to simple traversal
 sequences when the inner sequence is stripped.
 
-![](media/Path_Trav3/image7.png)
+![trav3](media/Path_Trav3/image7.png)
 
 ## Results
 I succesfully dumped the contents of the etc/passwd file.
