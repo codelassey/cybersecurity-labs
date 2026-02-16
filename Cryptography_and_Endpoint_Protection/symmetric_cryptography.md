@@ -1,4 +1,4 @@
-# EXPLORING MODERN SYMMETRIC ENCRYPTION ALGRITHMS
+# EXPLORING MODERN SYMMETRIC ENCRYPTION ALGORITHMS
 ## THE ADVANCED ENCRYPTION ALGORITHM (AES), BLOWFISH AND TWOFISH
 
 Due to the insecure nature of DES and 3DES, modern symmetric algorithms
@@ -8,7 +8,6 @@ systems.
 
 I logged into my linux virtual machine and visited **aescrypt.com** to get
 the AES Crypt package installed.
-
 ![image](media/symm/image1.png)
 
 Since I used Kali Linux, I opted to download the .deb package.(The
