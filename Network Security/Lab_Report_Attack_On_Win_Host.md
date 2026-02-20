@@ -264,8 +264,8 @@ of the domains seemed malicious to me hence I submitted the domain
 toptoptop1.online to virustotal where 13/93 security vendors flagged the
 domain as malicious.
 
-![image48](win_host/media/image48.png)
-![image49](win_host/media/image49.png)
+![image48](media/win_host/image48.png)
+![image49](media/win_host/image49.png)
 
 ## Conclusion
 This investigation successfully identified a multi-stage malware attack
