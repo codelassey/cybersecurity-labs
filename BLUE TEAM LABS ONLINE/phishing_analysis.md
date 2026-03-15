@@ -99,4 +99,4 @@ been removed". Lol the answer was hidden in plain sight.
 ![](media/phish/image24.png)
 
 ## Reflection
-This was an awesome investigation ofemail, as a vector phishing vector. I got to understand other header fields useful in conducting email phishing analysis.
+This was an awesome investigation of email, as a phishing vector. I got to understand other header fields useful in conducting email phishing analysis.
