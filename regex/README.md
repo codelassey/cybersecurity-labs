@@ -11,7 +11,13 @@
 4. [Core Symbols Reference](#4-core-symbols-reference)
    - 4.1 [Character Type Symbols](#41-character-type-symbols)
    - 4.2 [Quantifier Symbols](#42-quantifier-symbols)
-   - 4.3
+   - 4.3 [Anchors](#43-anchors)
+   - 4.4 [Character Classes and Groups](#44-character-classes-and-groups)
+   - 4.5 [Lookaheads and Lookbehinds](#45-lookaheads-and-lookbehinds)
+5. [Key `re` Module Functions](#5-key-re-module-functions)
+6. [Building Patterns](#6-building-patterns)
+
+
 
 ---
 
@@ -132,6 +138,149 @@ re.findall(r"<.+?>", text)  # Lazy:    ['<script>', '</script>']
  
 In log parsing, lazy matching often produces the results you actually want.
 
-### 4.3
+### 4.3 Anchors
+ 
+Anchors don't match characters, they match **positions** in the string:
+ 
+| Symbol | Position | Example | Use Case |
+|---|---|---|---|
+| `^` | Start of string  | `^ERROR` | Lines beginning with ERROR |
+| `$` | End of string  | `\.exe$` | Strings ending in .exe |
+
+ 
+```python
+log = "rootkit downloaded by root.exe"
+log1 = "ERROR.. not successfull"
+a = re.findall(r"^ERROR.+", log1)
+b = re.findall(r".+\.exe$", log)
+a, b
+
+#OUTPUT = (['ERROR.. not successfull'], ['rootkit downloaded by root.exe'])
+```
+
+### 4.4 Character Classes and Groups
+ 
+**Character classes** `[...]` match any single character listed inside:
+ 
+```python
+# Match any vowel
+r"[aeiouAEIOU]"
+ 
+# Match hex digits
+r"[0-9a-fA-F]"
+ 
+# Match anything that's NOT a digit (same as \D)
+r"[^\d]"
+ 
+# The ^ inside brackets means NOT
+r"[^a-z]"  # Any character that is not a lowercase letter
+```
+ 
+**Groups** `(...)` serve two purposes:
+1. **Capturing** - extract the matched portion
+2. **Grouping** - apply quantifiers to multiple characters at once
+
+```python
+# Capturing group - parentheses create a group whose match is returned
+log = "user=admin action=login"
+match = re.search(r"user=(\w+)", log)
+print(match.group(1))  # 'admin'
+
+## Above is because user=(\w+)
+##                        ^^^
+##                    capture this
+
+## - \w+ matches: admin
+## - and because it is inside ( ), it becomes group 1.
+```
+```python
+# Non-capturing group - use (?:...) when you just need to group, not capture
+
+r"(?:https?|ftp)://\S+"  # Matches URLs starting with http, https, or ftp
+```
+ 
+**Alternation** `|` works like OR:
+ 
+```python
+
+r"ssh|rdp|telnet"     # Matches any of the three protocols
+r"\b(GET|POST|PUT|DELETE|PATCH)\b"  # HTTP methods
+
+# \b prevents matching inside larger words such as TARGET
+
+```
+
+### 4.5 Lookaheads and Lookbehinds
+ 
+These are **zero-width assertions** - they look ahead or behind the current position without consuming characters. They're powerful for extracting values when the surrounding context matters.
+ 
+| Syntax | Type | Meaning |
+|---|---|---|
+| `(?=...)` | Positive lookahead | Match if followed by ... |
+| `(?!...)` | Negative lookahead | Match if NOT followed by ... |
+| `(?<=...)` | Positive lookbehind | Match if preceded by ... |
+| `(?<!...)` | Negative lookbehind | Match if NOT preceded by ... |
+ 
+```python
+log = "password=S3cur3P@ss username=admin"
+ 
+# Extract the value AFTER "password=" without including "password=" in the result
+a = re.findall(r"(?<=password=)\S+", log)  # ['S3cur3P@ss']
+ 
+# Find digits NOT followed by a period (avoid matching IP octets mid-address)
+b = re.findall(r"\d+(?!\.)", "Port 443 IP 10.0.0.1")  # ['443', '1', '1']
+ 
+# Find "admin" only when NOT preceded by "non-"
+c = re.findall(r"(?<!non-)admin", "admin nonadmin non-admin")  # ['admin', 'admin']
+
+a, b, c
+```
 
 ---
+
+## 5. Key `re` Module Functions
+ 
+| Function | Purpose | Returns |
+|---|---|---|
+| `re.findall(pattern, string)` | Find all non-overlapping matches | List of strings |
+| `re.search(pattern, string)` | Find first match anywhere in string | Match object or None |
+| `re.match(pattern, string)` | Match only at the **beginning** of string | Match object or None |
+| `re.fullmatch(pattern, string)` | Match must cover the entire string | Match object or None |
+| `re.finditer(pattern, string)` | Iterator over all matches | Iterator of Match objects |
+| `re.sub(pattern, repl, string)` | Replace all matches with `repl` | New string |
+| `re.split(pattern, string)` | Split string on pattern | List of strings |
+| `re.compile(pattern, flags)` | Pre-compile a pattern for reuse | Pattern object |
+ 
+### Match Objects
+ 
+`re.search()`, `re.match()`, and `re.fullmatch()` return a **Match object** when a match is found, or `None` otherwise. Always check for `None` before calling methods on it:
+ 
+```python
+log_line="192.168.56.1"
+match = re.search(r"(\d{1,3}\.){3}\d{1,3}", log_line)
+if match:
+    print(match.group())    # The entire match = 192.168.56.1
+    print(match.group(1))   # First capturing group = 56.
+    print(match.start())    # Start index in the string = 0
+    print(match.end())      # End index in the string = 12
+    print(match.span())     # (start, end) tuple = (0, 12)
+
+
+```
+ 
+### Compiling Patterns
+ 
+When you're running the same pattern thousands of times (think: scanning a 3-million-event SIEM index), compile the pattern once and reuse it:
+ 
+```python
+ip_pattern = re.compile(r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}")
+ 
+for log_line in huge_log_file:
+    matches = ip_pattern.findall(log_line)
+```
+ 
+Compiled patterns are significantly faster in loops because the regex engine doesn't re-parse the pattern string on every call.
+ 
+---
+
+## 6. Building Patterns
