@@ -1,13 +1,13 @@
-# Regular Expressions for Cybersecurity
+# Regular Expressions for Cybersecurity (Regex)
 > Within this folder, I compile some regex resources and commands useful to every Cybersecurity Analyst for easy reference. 
-> I will also include a jupter notebook (`regex-for-cybersecurity.ipynb`) containing using Regex commands explained here to solve different kind of scenarios.. or I guess you can just call them problems.
+> I will also include a jupter notebook (`regex-cybersecurity-labs.ipynb`) containing using Regex commands explained here to solve different kind of scenarios.. or I guess you can just call them problems.
 ---
  
 ## Table of Contents
 
 1. [What Is a Regular Expression?](#1-what-is-a-regular-expression)
-
-
+2. [Why Regex Matters in Cybersecurity](#2-why-regex-matters-in-cybersecurity)
+3. 
 
 
 
@@ -30,4 +30,24 @@ Regex is language-agnostic.. thus the same pattern concepts apply in Python, bas
 
 ---
 
-## 2.
+## 2. Why Regex Matters in Cybersecurity
+ 
+Security analysts deal with *massive* amounts of unstructured text (auth logs, firewall logs, PCAP metadata, EDR telemetry, threat intel feeds, SIEM dashboards) and doing this work manually is both slow and error-prone. Regex automates the extraction and classification of indicators.
+ 
+Here's where regex shows up in the SOC:
+ 
+| Use Case | What Regex Does |
+|---|---|
+| **Log parsing** | Extracts usernames, IPs, timestamps, error codes from raw log lines |
+| **IOC extraction** | Pulls hashes, IPs, URLs, email addresses from threat reports |
+| **Alert tuning** | Matches patterns in SIEM rules to reduce false positives |
+| **IDS/IPS signatures** | Suricata and Snort use PCRE (Perl Compatible Regular Expressions) in rule content matching |
+| **YARA rules** | Malware signatures use regex-like string patterns |
+| **SOAR playbooks** | N8N, Shuffle, and similar tools use regex in conditional logic to triage alerts |
+| **DLP (Data Loss Prevention)** | Detect credit cards, SSNs, API keys in outbound traffic |
+| **Incident Response** | Rapidly grep through filesystem artifacts, memory dumps, event logs |
+| **Threat hunting** | Search SIEM indexes for anomalous patterns that didn't trigger any alert |
+ 
+---
+
+##
