@@ -16,6 +16,21 @@
    - 4.5 [Lookaheads and Lookbehinds](#45-lookaheads-and-lookbehinds)
 5. [Key `re` Module Functions](#5-key-re-module-functions)
 6. [Building Patterns](#6-building-patterns)
+7. [Cybersecurity Pattern Library](#7-cybersecurity-pattern-library)
+   - 7.1 [IP Addresses (IPv4 and IPv6)](#71-ip-addresses-ipv4-and-ipv6)
+   - 7.2 [Email Addresses](#72-email-addresses)
+   - 7.3 [URLs and Domains](#73-urls-and-domains)
+   - 7.4 [Hashes (MD5, SHA1, SHA256)](#74-hashes-md5-sha1-sha256)
+   - 7.5 [CVE Identifiers](#75-cve-identifiers)
+   - 7.6 [Log Entry Parsing](#76-log-entry-parsing)
+   - 7.7 [Windows Event IDs](#77-windows-event-ids)
+   - 7.8 [SSH Brute Force Detection](#78-ssh-brute-force-detection)
+   - 7.9 [User Agent Strings](#79-user-agent-strings)
+   - 7.10 [Base64 Encoded Payloads](#710-base64-encoded-payloads)
+   - 7.11 [MAC Addresses](#711-mac-addresses)
+   - 7.12 [File Paths and Suspicious Extensions](#712-file-paths-and-suspicious-extensions)
+   - 7.13 [Registry Keys (Windows)](#713-registry-keys-windows)
+   - 7.14 [Credit Card Numbers (PII Detection)](#714-credit-card-numbers-pii-detection)
 
 
 
@@ -270,7 +285,7 @@ if match:
  
 ### Compiling Patterns
  
-When you're running the same pattern thousands of times (think: scanning a 3-million-event SIEM index), compile the pattern once and reuse it:
+When you're running the same pattern thousands of times, compile the pattern once and reuse it:
  
 ```python
 ip_pattern = re.compile(r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}")
@@ -284,3 +299,172 @@ Compiled patterns are significantly faster in loops because the regex engine doe
 ---
 
 ## 6. Building Patterns
+
+The key skill in regex is **decomposing** what you want to match into small, describable chunks, then translating each chunk into symbols.
+ 
+### Example: Parsing an Apache Access Log Line
+ 
+```
+192.168.1.105 - admin [15/Jan/2024:10:22:33 +0000] "GET /admin/config.php HTTP/1.1" 200 4523
+```
+ 
+**Goal:** Extract IP, username, timestamp, HTTP method, path, and status code.
+ 
+**Step 1 - IP address:**
+- Four groups of 1–3 digits separated by dots
+- Pattern: `\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}`
+**Step 2 - Username (between the two dashes):**
+- A word character sequence: `\w+`
+- Preceded by `- ` and followed by ` [`: use lookbehind/lookahead or just capture with context
+**Step 3 - Timestamp in brackets:**
+- `\[` literal bracket, then date/time content, then `\]`
+- Pattern: `\[([^\]]+)\]`
+**Step 4 - HTTP method and path:**
+- Pattern: `"(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS) (/\S*)`
+**Step 5 - Status code:**
+- Three digits at a specific position
+- Pattern: `" (\d{3}) `
+**Combined pattern:**
+ 
+```python
+import re
+ 
+log = '192.168.1.105 - admin [15/Jan/2024:10:22:33 +0000] "GET /admin/config.php HTTP/1.1" 200 4523'
+ 
+pattern = r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) - (\w+) \[([^\]]+)\] "(\w+) (\S+) HTTP/[\d.]+" (\d{3})'
+match = re.match(pattern, log)
+ 
+if match:
+    ip, user, timestamp, method, path, status = match.groups()
+    print(f"IP: {ip}, User: {user}, Timestamp: {timestamp}, Method: {method}, Path: {path}, Status: {status}")
+```
+ 
+---
+
+## 7. Cybersecurity Pattern Library
+ 
+### 7.1 IP Addresses (IPv4 and IPv6)
+ 
+**IPv4 - basic (1–3 digits per octet):**
+```python
+r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
+```
+ 
+**IPv4 - strict (valid range 0–255 per octet):**
+This is longer but more accurate - avoids matching `999.999.999.999`:
+```python
+r"(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)"
+```
+ 
+**IPv6 - full form:**
+```python
+r"(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}"
+```
+ 
+**IPv6 - compressed form (handles `::` notation):**
+```python
+r"(?:[0-9a-fA-F]{0,4}:){2,7}[0-9a-fA-F]{0,4}"
+```
+ 
+**Private IP detection** (RFC 1918):
+```python
+r"(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3})"
+```
+ 
+### 7.2 Email Addresses
+
+**Basic:**
+```
+r"\w+@\w+\.\w+"r"\w+@\w+\.\w+"
+```
+
+**Long:**
+```python
+r"[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+```
+ 
+**Phishing detection - suspicious TLDs or patterns:**
+```python
+# Emails with suspicious TLDs or hyphenated domains (common in phishing)
+r"[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*\.(?:tk|ml|ga|cf|gq|xyz|top|click|download)"
+```
+ 
+### 7.3 URLs and Domains
+ 
+**General URL:**
+```python
+r"https?://(?:www\.)?[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}(?:/[^\s]*)?"
+```
+ 
+**URL with optional port:**
+```python
+r"https?://[a-zA-Z0-9\-\.]+(?::\d{1,5})?(?:/[^\s]*)?"
+```
+ 
+**Suspicious URL indicators** (common in phishing/malware C2):
+```python
+# IPs used directly as host (instead of domain)
+r"https?://\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(?::\d+)?(?:/\S*)?"
+ 
+# Encoded characters in URL (obfuscation)
+r"https?://\S*%[0-9a-fA-F]{2}\S*"
+```
+ 
+**Domain extraction:**
+```python
+r"(?:^|\s|\()([a-zA-Z0-9](?:[a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.(?:[a-zA-Z]{2,}))"
+```
+ 
+### 7.4 Hashes (MD5, SHA1, SHA256)
+ 
+File hashes are key IOCs (Indicators of Compromise) in malware analysis.
+ 
+```python
+# MD5 - 32 hex characters
+r"\b[0-9a-fA-F]{32}\b"
+ 
+# SHA1 - 40 hex characters
+r"\b[0-9a-fA-F]{40}\b"
+ 
+# SHA256 - 64 hex characters
+r"\b[0-9a-fA-F]{64}\b"
+ 
+# SHA512 - 128 hex characters
+r"\b[0-9a-fA-F]{128}\b"
+ 
+# Any hash (32, 40, 64, or 128 hex chars)
+r"\b[0-9a-fA-F]{32}(?:[0-9a-fA-F]{8}(?:[0-9a-fA-F]{16}(?:[0-9a-fA-F]{64})?)?)?\b"
+```
+ 
+**Practical use - extract hashes from a VirusTotal report:**
+```python
+import re
+ 
+report = """
+File: malware.exe
+MD5:    d41d8cd98f00b204e9800998ecf8427e
+SHA1:   da39a3ee5e6b4b0d3255bfef95601890afd80709
+SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+"""
+ 
+md5    = re.findall(r"\b[0-9a-fA-F]{32}\b", report)
+sha1   = re.findall(r"\b[0-9a-fA-F]{40}\b", report)
+sha256 = re.findall(r"\b[0-9a-fA-F]{64}\b", report)
+
+print(f"MD5: {md5[0]}")
+print(f"SHA1: {sha1[0]}")
+print(f"SHA256: {sha256[0]}")
+
+```
+ 
+### 7.5 CVE Identifiers
+ 
+```python
+# Standard CVE format: CVE-YEAR-IDNUMBER
+r"\bCVE-\d{4}-\d{4,7}\b"
+ 
+# Case-insensitive match (some reports write "cve-2024-1234")
+re.findall(r"\bCVE-\d{4}-\d{4,7}\b", text, re.IGNORECASE)
+```
+ 
+### 7.6 Log Entry Parsing
