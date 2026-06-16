@@ -447,9 +447,9 @@ SHA1:   da39a3ee5e6b4b0d3255bfef95601890afd80709
 SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 """
  
-md5    = re.findall(r"\b[0-9a-fA-F]{32}\b", report)
-sha1   = re.findall(r"\b[0-9a-fA-F]{40}\b", report)
-sha256 = re.findall(r"\b[0-9a-fA-F]{64}\b", report)
+md5    = re.findall(r"\b[0-9a-fA-F]{32}\b", report) # or md5    = re.findall(r"[\w+]{32}", report)
+sha1   = re.findall(r"\b[0-9a-fA-F]{40}\b", report) # or sha1   = re.findall(r"[\w+]{40}", report)
+sha256 = re.findall(r"\b[0-9a-fA-F]{64}\b", report) # or sha256 = re.findall(r"[\w+]{64}", report)
 
 print(f"MD5: {md5[0]}")
 print(f"SHA1: {sha1[0]}")
