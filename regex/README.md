@@ -468,3 +468,75 @@ re.findall(r"\bCVE-\d{4}-\d{4,7}\b", text, re.IGNORECASE)
 ```
  
 ### 7.6 Log Entry Parsing
+
+**Syslog format:**
+```
+log = "Jan 15 10:22:33 hostname sshd[12345]: Failed password for root from 192.168.1.5 port 22 ssh2"
+```
+```python
+pattern = r"(\w{3}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2})\s+(\S+)\s+(\S+):\s+(.+)"
+
+showme = re.findall(pattern, log)
+print(showme)
+
+# Groups: timestamp, hostname, process, message
+
+# [('Jan 15 10:22:33', 'hostname', 'sshd[12345]', 'Failed password for root from 192.168.1.5 port 22 ssh2')]
+```
+ 
+**Auth.log - failed SSH login:**
+```python
+r"Failed password for (?:invalid user )?(\w+) from (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) port (\d+)"
+
+# Groups: username, IP, port
+# [('root', '192.168.1.5', '22')]
+```
+ 
+**Nginx/Apache access log:**
+```python
+r'(\d{1,3}(?:\.\d{1,3}){3}) - (\S+) \[([^\]]+)\] "(\w+) (\S+) HTTP/[\d.]+" (\d{3}) (\d+)'
+# Groups: IP, user, timestamp, method, path, status, bytes
+```
+ 
+**Windows Event Log (text export):**
+```python
+# Extract EventID
+r"EventID:\s*(\d+)"
+ 
+# Extract Account Name from Security events
+r"Account Name:\s*(\S+)"
+ 
+# Logon Type extraction
+r"Logon Type:\s*(\d+)"
+```
+ 
+**Cowrie SSH honeypot log:**
+```python
+r'(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+Z)\s+\[(\S+)\]\s+(.+)'
+```
+
+### 7.7 Windows Event IDs
+ 
+Common Event IDs worth hunting for. These appear in raw log text when exporting from Event Viewer or parsing `.evtx` files:
+ 
+```python
+# Critical event IDs for quick reference
+critical_event_ids = {
+    "4624": "Successful logon",
+    "4625": "Failed logon",
+    "4648": "Logon with explicit credentials",
+    "4672": "Special privileges assigned to new logon",
+    "4688": "New process created",
+    "4698": "Scheduled task created",
+    "4720": "User account created",
+    "4732": "User added to local group",
+    "4768": "Kerberos TGT requested",
+    "4769": "Kerberos service ticket requested",
+    "7045": "New service installed",
+}
+ 
+# Find all event IDs in a log dump
+event_id_pattern = r"(?:EventID|Event ID):\s*(\d{4})"
+```
+
+### 7.8 SSH Brute Force Detection
