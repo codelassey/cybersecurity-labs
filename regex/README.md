@@ -540,3 +540,114 @@ event_id_pattern = r"(?:EventID|Event ID):\s*(\d{4})"
 ```
 
 ### 7.8 SSH Brute Force Detection
+```python
+import re
+from collections import Counter
+
+auth_log = """
+Jan 15 10:22:33 server sshd[1234]: Failed password for root from 185.234.218.57 port 52341 ssh2
+Jan 15 10:22:34 server sshd[1235]: Failed password for admin from 185.234.218.57 port 52342 ssh2
+Jan 15 10:22:35 server sshd[1236]: Failed password for root from 185.234.218.57 port 52343 ssh2
+Jan 15 10:22:36 server sshd[1237]: Accepted password for deploy from 10.0.0.5 port 22341 ssh2
+"""
+ 
+# Extract all IPs involved in failed logins
+pattern = r"Failed password for .+ from (\d{1,3}(?:\.\d{1,3}){3})"
+failed_ips = re.findall(pattern, auth_log)
+ 
+# Count attempts per IP
+ip_counts = Counter(failed_ips)
+THRESHOLD = 3
+ 
+for ip, count in ip_counts.items():
+    if count >= THRESHOLD:
+        print(f"[ALERT] Brute force detected: {ip} — {count} failed attempts")
+
+# [ALERT] Brute force detected: 185.234.218.57 — 3 failed attempts
+```
+### 7.9 User Agent Strings
+ 
+Attackers often use default or tool-specific user agents. Scanning for these in proxy/web logs is a quick win.
+ 
+```python
+suspicious_ua_patterns = [
+    r"(?i)python-requests/\d",              # Python requests library (scripts/bots)
+    r"(?i)curl/\d",                         # curl (may indicate automated scanning)
+    r"(?i)nmap scripting engine",           # Nmap NSE
+    r"(?i)nikto",                           # Nikto web scanner
+    r"(?i)sqlmap",                          # SQLMap injection tool
+    r"(?i)masscan",                         # Masscan port scanner
+    r"(?i)zgrab",                           # ZGrab scanner
+    r"(?i)go-http-client/\d",              # Go HTTP client (many scanners/bots)
+    r"(?i)dirbuster",                       # DirBuster directory enumeration
+    r"(?i)nuclei",                          # Nuclei vulnerability scanner
+    r"-$",                                  # Empty user agent (just a dash)
+]
+ 
+def check_suspicious_ua(user_agent):
+    for pattern in suspicious_ua_patterns:
+        if re.search(pattern, user_agent):
+            return True, pattern
+    return False, None
+```
+ 
+### 7.10 Base64 Encoded Payloads
+ 
+Attackers encode commands in Base64 to evade signature detection. Base64 strings have a recognizable character set and are often padded with `=`.
+ 
+```python
+# Basic Base64 pattern (looks for reasonably long base64 strings)
+r"(?:[A-Za-z0-9+/]{4}){4,}(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?"
+ 
+# PowerShell Base64 encoded command (common in malware)
+r"-[Ee](?:nc(?:odedcommand)?|c)\s+([A-Za-z0-9+/=]{20,})"
+ 
+# Decode and inspect
+import base64
+ 
+b64_payload = "cG93ZXJzaGVsbCAtZXAgYnlwYXNz"
+try:
+    decoded = base64.b64decode(b64_payload).decode("utf-8", errors="replace")
+    print(f"Decoded: {decoded}")
+except Exception as e:
+    print(f"Decode failed: {e}")
+
+# Decoded: powershell -ep bypass
+```
+ 
+### 7.11 MAC Addresses
+ 
+```python
+# Standard colon-separated format
+r"\b(?:[0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}\b"
+ 
+# Hyphen-separated (Windows format)
+r"\b(?:[0-9a-fA-F]{2}-){5}[0-9a-fA-F]{2}\b"
+ 
+# Dot-separated (Cisco format)
+r"\b(?:[0-9a-fA-F]{4}\.){2}[0-9a-fA-F]{4}\b"
+ 
+# All formats combined
+r"\b(?:[0-9a-fA-F]{2}[:\-]){5}[0-9a-fA-F]{2}\b|\b(?:[0-9a-fA-F]{4}\.){2}[0-9a-fA-F]{4}\b"
+```
+ 
+### 7.12 File Paths and Suspicious Extensions
+ 
+```python
+# Windows file path
+r"[A-Za-z]:\\(?:[^\\\/:*?\"<>|\r\n]+\\)*[^\\\/:*?\"<>|\r\n]*"
+ 
+# Linux/Unix file path
+r"/(?:[^/\0]+/)*[^/\0]+"
+ 
+# Suspicious executable extensions (could be malware drops)
+r"\b\S+\.(?:exe|dll|bat|cmd|ps1|vbs|vbe|js|jse|wsf|wsh|hta|scr|pif|com|msi|msp|mst)\b"
+ 
+# Double extension trick (ex: invoice.pdf.exe)
+r"\b\S+\.\w{3,4}\.\w{3,4}\b"
+ 
+# Temp directory (common malware staging area)
+r"(?i)(?:C:\\(?:Windows\\Temp|Users\\\w+\\AppData\\(?:Local|Roaming)\\Temp)|/tmp|/var/tmp)/\S+"
+```
+ 
+### 7.13 Registry Keys (Windows)
