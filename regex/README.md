@@ -31,8 +31,11 @@
    - 7.12 [File Paths and Suspicious Extensions](#712-file-paths-and-suspicious-extensions)
    - 7.13 [Registry Keys (Windows)](#713-registry-keys-windows)
    - 7.14 [Credit Card Numbers (PII Detection)](#714-credit-card-numbers-pii-detection)
-
-
+8. [Regex in SIEM and Log Analysis](#8-regex-in-siem-and-log-analysis)
+   - 8.1 [Splunk SPL with Regex](#81-splunk-spl-with-regex)
+   - 8.2 [Suricata Signature Rules](#82-suricata-signature-rules)
+   - 8.3 [Grep in Bash for IR](#83-grep-in-bash-for-ir)
+9. [Common Mistakes and How to Avoid Them](#9-common-mistakes-and-how-to-avoid-them)
 
 ---
 
@@ -651,3 +654,119 @@ r"(?i)(?:C:\\(?:Windows\\Temp|Users\\\w+\\AppData\\(?:Local|Roaming)\\Temp)|/tmp
 ```
  
 ### 7.13 Registry Keys (Windows)
+
+```python
+# HKEY roots
+r"\b(?:HKEY_LOCAL_MACHINE|HKEY_CURRENT_USER|HKEY_CLASSES_ROOT|HKEY_USERS|HKEY_CURRENT_CONFIG|HKLM|HKCU|HKCR)\b"
+ 
+# Full registry path
+r"(?:HKEY_LOCAL_MACHINE|HKEY_CURRENT_USER|HKLM|HKCU)\\(?:[^\\\n]+\\)*[^\\\n]+"
+ 
+# Common persistence registry keys
+persistence_keys = [
+    r"\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\b",
+    r"\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce\b",
+    r"\\SYSTEM\\CurrentControlSet\\Services\\\w+",
+    r"\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\b",
+]
+```
+ 
+### 7.14 Credit Card Numbers (PII Detection)
+ 
+Useful for DLP (Data Loss Prevention) scenarios:
+ 
+```python
+# Visa (starts with 4, 13 or 16 digits)
+r"\b4[0-9]{12}(?:[0-9]{3})?\b"
+ 
+# Mastercard (starts with 51-55 or 2221-2720, 16 digits)
+r"\b(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}\b"
+ 
+# American Express (starts with 34 or 37, 15 digits)
+r"\b3[47][0-9]{13}\b"
+ 
+# Generic 16-digit card with optional separators
+r"\b(?:\d{4}[\s\-]?){3}\d{4}\b"
+ 
+# SSN (US Social Security Number)
+r"\b(?!000|666|9\d\d)\d{3}-(?!00)\d{2}-(?!0000)\d{4}\b"
+```
+ 
+---
+ 
+## 8. Regex in SIEM and Log Analysis
+
+### 8.1 Splunk SPL with Regex
+ 
+In Splunk, regex appears in several contexts:
+ 
+```spl
+| rex field=_raw "Failed password for (?:invalid user )?(?P<username>\S+) from (?P<src_ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"
+```
+ 
+Named capture groups (`(?P<name>...)`) in Splunk's `rex` command create new fields directly in your search results. This is the backbone of field extraction in sourcetypes that don't have pre-built parsers.
+ 
+```spl
+| rex field=_raw "(?P<hash>[0-9a-fA-F]{64})"
+| where isnotnull(hash)
+| lookup threat_intel_hashes hash OUTPUT threat_name
+| where isnotnull(threat_name)
+```
+ 
+### 8.2 Suricata Signature Rules
+ 
+Suricata uses PCRE (Perl Compatible Regular Expressions) in the `pcre` keyword of rules:
+ 
+```
+alert http any any -> any any (
+    msg:"Suspicious PowerShell User-Agent";
+    http.user_agent;
+    pcre:"/python-requests\/\d+\.\d+/i";
+    sid:9001001;
+    rev:1;
+)
+```
+ 
+```
+alert tcp any any -> $HOME_NET 22 (
+    msg:"SSH Brute Force Attempt";
+    flow:to_server,established;
+    content:"SSH";
+    threshold:type threshold, track by_src, count 5, seconds 60;
+    sid:9001002;
+    rev:1;
+)
+```
+ 
+The `pcre:` field accepts standard PCRE regex with flags (`/pattern/flags`). Common flags: `i` = case insensitive, `s` = dot matches newline, `m` = multiline.
+ 
+### 8.3 Grep in Bash for IR
+ 
+During incident response, you often need to triage quickly without spinning up a Python environment:
+ 
+```bash
+# Find all IPs in an auth log
+grep -oE '\b([0-9]{1,3}\.){3}[0-9]{1,3}\b' /var/log/auth.log | sort | uniq -c | sort -rn
+ 
+# Find failed SSH logins and extract IPs
+grep "Failed password" /var/log/auth.log | grep -oE '\b([0-9]{1,3}\.){3}[0-9]{1,3}\b' | sort | uniq -c | sort -rn | head -20
+ 
+# Find executions of suspicious binaries in bash history
+grep -E '(base64|wget|curl|nc|ncat|socat|python -c|perl -e)' ~/.bash_history
+ 
+# Search for CVE mentions in downloaded files
+grep -riE '\bCVE-[0-9]{4}-[0-9]{4,7}\b' /tmp/
+ 
+# Find world-writable SUID binaries (post-exploitation detection)
+find / -perm -4000 -o -perm -2000 2>/dev/null | grep -E "/(bin|sbin|usr/bin|usr/sbin)/"
+ 
+# Extract URLs from a pcap text dump
+tshark -r capture.pcap -T fields -e http.request.full_uri | grep -E 'https?://'
+ 
+# Find base64 encoded PowerShell in Windows event logs
+grep -oP '(?<=-[Ee]nc\s)[A-Za-z0-9+/=]{50,}' powershell_log.txt
+```
+ 
+---
+ 
+## 9. Common Mistakes and How to Avoid Them
