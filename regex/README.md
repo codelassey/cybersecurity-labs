@@ -36,6 +36,7 @@
    - 8.2 [Suricata Signature Rules](#82-suricata-signature-rules)
    - 8.3 [Grep in Bash for IR](#83-grep-in-bash-for-ir)
 9. [Common Mistakes and How to Avoid Them](#9-common-mistakes-and-how-to-avoid-them)
+10. [Regex Flags](#10-regex-flags)
 
 ---
 
@@ -564,9 +565,9 @@ THRESHOLD = 3
  
 for ip, count in ip_counts.items():
     if count >= THRESHOLD:
-        print(f"[ALERT] Brute force detected: {ip} — {count} failed attempts")
+        print(f"[ALERT] Brute force detected: {ip} - {count} failed attempts")
 
-# [ALERT] Brute force detected: 185.234.218.57 — 3 failed attempts
+# [ALERT] Brute force detected: 185.234.218.57 - 3 failed attempts
 ```
 ### 7.9 User Agent Strings
  
@@ -770,3 +771,79 @@ grep -oP '(?<=-[Ee]nc\s)[A-Za-z0-9+/=]{50,}' powershell_log.txt
 ---
  
 ## 9. Common Mistakes and How to Avoid Them
+
+### 1. Forgetting Raw Strings
+```python
+# WRONG - \b is Python's backspace character
+pattern = "\broot\b"
+ 
+# RIGHT
+pattern = r"\broot\b"
+```
+ 
+### 2. Using `.` When You Mean a Literal Period
+```python
+# WRONG - matches "192X168X1X1" too
+pattern = r"192.168.1.1"
+ 
+# RIGHT
+pattern = r"192\.168\.1\.1"
+```
+ 
+### 3. Greedy Quantifiers Eating Too Much
+```python
+log = '<script>evil()</script><script>also_evil()</script>'
+ 
+# WRONG - greedy, matches the whole thing as one
+re.findall(r"<script>.+</script>", log)
+# ['<script>evil()</script><script>also_evil()</script>']
+ 
+# RIGHT - lazy, matches each tag separately
+re.findall(r"<script>.+?</script>", log)
+# ['<script>evil()</script>', '<script>also_evil()</script>']
+```
+ 
+### 4. Not Anchoring When You Need Exact Matches
+```python
+# This matches "192.168.1.1" inside "1192.168.1.100" too
+re.findall(r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}", "1192.168.1.100")
+ 
+# Anchor with \b to prevent partial matches
+re.findall(r"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b", "1192.168.1.100")
+```
+ 
+### 5. Case Sensitivity
+```python
+# "Powershell" won't match "PowerShell" or "POWERSHELL"
+re.findall(r"powershell", log)
+ 
+# Use re.IGNORECASE flag or inline (?i)
+re.findall(r"powershell", log, re.IGNORECASE)
+re.findall(r"(?i)powershell", log)
+```
+ 
+### 6. Catastrophic Backtracking
+Some patterns can cause the regex engine to exponentially backtrack on certain inputs, hanging your script. This is called **ReDoS (Regular Expression Denial of Service)**:
+ 
+```python
+# DANGEROUS pattern - nested quantifiers on overlapping character sets
+# r"(a+)+" will hang on "aaaaaaaaaaaaaaab"
+ 
+# SAFE - be specific, avoid nested quantifiers on the same character set
+r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"  # Bounded quantifiers are fine
+```
+ 
+---
+ 
+## 10. Regex Flags
+
+Flags modify how the regex engine behaves:
+ 
+| Flag | Short | Meaning |
+|---|---|---|
+| `re.IGNORECASE` | `re.I` | Case-insensitive matching |
+| `re.MULTILINE` | `re.M` | `^` and `$` match start/end of each line, not just the whole string |
+| `re.DOTALL` | `re.S` | `.` matches any character including newlines |
+| `re.VERBOSE` | `re.X` | Allows whitespace and `#` comments in the pattern |
+| `re.ASCII` | `re.A` | `\w`, `\d`, `\s` match only ASCII characters |
+
