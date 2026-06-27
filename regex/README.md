@@ -37,7 +37,8 @@
    - 8.3 [Grep in Bash for IR](#83-grep-in-bash-for-ir)
 9. [Common Mistakes and How to Avoid Them](#9-common-mistakes-and-how-to-avoid-them)
 10. [Regex Flags](#10-regex-flags)
-11. 
+11. [Performance Considerations](#11-performance-considerations)
+12. [Quick Reference Cheat Sheet](#12-quick-reference-cheat-sheet) 
 
 
 ---
