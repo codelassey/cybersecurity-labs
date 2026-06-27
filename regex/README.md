@@ -37,6 +37,8 @@
    - 8.3 [Grep in Bash for IR](#83-grep-in-bash-for-ir)
 9. [Common Mistakes and How to Avoid Them](#9-common-mistakes-and-how-to-avoid-them)
 10. [Regex Flags](#10-regex-flags)
+11. 
+
 
 ---
 
@@ -847,3 +849,72 @@ Flags modify how the regex engine behaves:
 | `re.VERBOSE` | `re.X` | Allows whitespace and `#` comments in the pattern |
 | `re.ASCII` | `re.A` | `\w`, `\d`, `\s` match only ASCII characters |
 
+---
+
+## 11. Performance Considerations
+ 
+When processing large log files in a SOC context:
+ 
+1. **Compile patterns** you use in loops — `re.compile()` pays off immediately on large datasets.
+2. **Use `re.search()` instead of `re.findall()`** when you only need to know *if* something exists, not *what* it is.
+3. **Anchor patterns when possible** — `^` or `\b` at the start means the engine can skip most of the string quickly.
+4. **Avoid catastrophic backtracking** — test patterns against adversarial inputs (long strings of repeating characters).
+5. **Consider `re.finditer()`** over `re.findall()` for very large strings — it's memory-efficient since it yields one match at a time.
+6. **Use specific character classes** instead of `.` — `[a-zA-Z0-9]` is faster than `.` because it eliminates more characters quickly.
+```python
+# Memory-efficient iteration over a huge log file
+import re
+ 
+pattern = re.compile(r"Failed password for (\S+) from (\d{1,3}(?:\.\d{1,3}){3})")
+ 
+with open("/var/log/auth.log", "r", errors="replace") as f:
+    for line in f:
+        for match in pattern.finditer(line):
+            user, ip = match.group(1), match.group(2)
+            # Process without loading entire file into memory
+```
+ 
+---
+ 
+## 12. Quick Reference Cheat Sheet
+
+Note that, I added alternative and a bit simpler regex expressions within some of the sections above which I did not add to the reference sheet below.
+
+```
+CHARACTER TYPES          QUANTIFIERS             ANCHORS
+\w  [a-zA-Z0-9_]        +   one or more         ^   start of string/line
+\W  non-word             *   zero or more        $   end of string/line
+\d  digit                ?   zero or one         \b  word boundary
+\D  non-digit            {n}  exactly n          \B  non-word boundary
+\s  whitespace           {n,} n or more
+\S  non-whitespace       {n,m} between n and m
+.   any (not newline)
+ 
+GROUPS & ALTERNATION     LOOKAROUNDS             ESCAPING
+(...)  capture group     (?=...)  lookahead       \.  literal dot
+(?:...) non-capture      (?!...)  neg lookahead   \[  literal bracket
+a|b  OR                  (?<=...) lookbehind      \\  literal backslash
+[abc]  char class        (?<!...) neg lookbehind
+[^abc] negated class
+[a-z]  range
+ 
+FLAGS (re module)
+re.I / re.IGNORECASE
+re.M / re.MULTILINE
+re.S / re.DOTALL
+re.X / re.VERBOSE
+re.A / re.ASCII
+ 
+COMMON SOC PATTERNS
+IPv4 (basic):     \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}
+IPv4 (strict):    (?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)
+MD5:              [0-9a-fA-F]{32}
+SHA256:           [0-9a-fA-F]{64}
+CVE:              CVE-\d{4}-\d{4,7}
+Email:            [a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}
+URL:              https?://\S+
+MAC:              (?:[0-9a-fA-F]{2}[:\-]){5}[0-9a-fA-F]{2}
+B64 PS cmd:       -[Ee](?:nc|c)\s+([A-Za-z0-9+/=]{20,})
+```
+ 
+---
