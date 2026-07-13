@@ -26,7 +26,7 @@ showed consistent patterns from the same IP address.
 The attacker successfully executed multiple XSS payloads including alert popups and cookie theft attempts.
 
 ### Attack Classification
-**Type of XSS:** Reflected XSS
+**Type of XSS:** Reflected
 
 The attacker used reflected XSS techniques where the payload was delivered through the URL parameter and executed 
 immediately in the victim's browser upon visiting the crafted link.
