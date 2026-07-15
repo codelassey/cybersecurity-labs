@@ -123,7 +123,7 @@ Following successful authentication, the attacker engaged in additional maliciou
 - Enumerating all posts (postId=1-10)
 - Spamming the comment system with repeated POST requests to `/post/comment`
 
-[br1](images/br1.png)
+![br1](images/br1.png)
 
 ### Security Weaknesses Identified
 
