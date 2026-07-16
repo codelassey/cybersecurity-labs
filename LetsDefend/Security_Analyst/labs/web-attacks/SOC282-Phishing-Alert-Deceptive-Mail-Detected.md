@@ -254,7 +254,7 @@ malware execution, no additional containment actions or Tier 2 escalation were r
 
 ---
 
-# Part 2
+# Part Two
 ## Additional Endpoint Investigation
 
 While working through the LetsDefend module, I came across a few questions that made me realize something important.
