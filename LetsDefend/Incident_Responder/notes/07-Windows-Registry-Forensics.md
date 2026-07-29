@@ -395,7 +395,7 @@ Answer: `pickerhost.exe`
 
 **Q1. Which registry root key is user oriented?**
 - HKEY_LOCAL_MACHINE
-- **HKEY_CURRENT_USER  **
+- **HKEY_CURRENT_USER**
 - HKEY_USERS
 - HKEY_CLASSES_ROOT
 
@@ -403,35 +403,35 @@ Answer: `pickerhost.exe`
 - C:\Windows\System32\registry32\Config
 - C:\Windows\System32\Config32
 - C:\Windows\System32\Win32\registry config
-- **C:\Windows\System32\Config  **
+- **C:\Windows\System32\Config**
 
 **Q3. Amcache is considered as:**
 - Evidence of deletion
 - Evidence of modification
-- **Evidence of execution  **
+- **Evidence of execution**
 - Evidence of renaming
 
 **Q4. What information do the Shellbags store?**
 - Files
 - CLI Commands
-- **Directories  **
+- **Directories**
 - Documents
 
 **Q5. Which control set is used live by the system?**
 - Controlset000
-- **ControlSet001  **
+- **ControlSet001**
 - ControlSet002
 - ControlSet003
 
 **Q6. What information does the RecentDocs registry key hold?**
-- **Recent applications  **
+- **Recent applications**
 - Recent documents
 - Recent folders
 - Recent executables
 
 **Q7. Which hive stores data about the local accounts?**
 - SECURITY
-- **SAM  **
+- **SAM**
 - SOFTWARE
 - SYSTEM
 
@@ -439,12 +439,12 @@ Answer: `pickerhost.exe`
 - txt
 - evtx
 - hive
-- **hve  **
+- **hve**
 
 **Q9. Which of the following is the log file that stores data yet to be included in registry hives?**
 - Registry log
 - Data log
-- **Transaction log  **
+- **Transaction log**
 - File log
 
 ---
