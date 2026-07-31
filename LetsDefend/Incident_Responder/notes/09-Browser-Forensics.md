@@ -39,7 +39,7 @@ A company suspects an employee leaked sensitive customer data to a competitor. A
 
 ### Questions
 
-**What is the goal of browser forensics?**
+**1. What is the goal of browser forensics?**
 - A) Invading individuals' privacy
 - B) Track user's online activity to find cause of compromise
 - C) Find corporate policy violations
@@ -47,7 +47,8 @@ A company suspects an employee leaked sensitive customer data to a competitor. A
 
 Answer: **D**
 
-**Browser extensions are not considered browser artifacts.**
+**2. Browser extensions are not considered browser artifacts.**
+
 Answer: **False**
 
 ---
@@ -71,9 +72,11 @@ Answer: **False**
 ### Questions
 
 **1. Forensics copy of data doesn't always need to be same as its original bit by bit.**
+
 Answer: **False**
 
 **2. What is the full path where the majority of artifacts are stored?**
+
 Answer: **C:\Users\LetsDefend\AppData\Local\Google\Chrome\User Data\Default**
 
 ---
@@ -100,11 +103,13 @@ Overview of the key artifacts and what each reveals. (Full path table consolidat
 
 > Lab note: don't open Chrome during these labs (it can modify the evidence) - use Edge instead.
 
-**What's the size of the favicon database?**
+**1. What's the size of the favicon database?**
+
 Navigated to `C:\Users\LetsDefend\AppData\Local\Google\Chrome\User Data\Default` and checked the Favicons file properties.
+
 Answer: **44 KB**
 
-**What's the name of the first folder where extensions are stored?**
+**2. What's the name of the first folder where extensions are stored?**
 
 ![](images/extensions.png)
 
@@ -124,7 +129,8 @@ Answer: **agohkbfananbebiaphblgcfhcclklfnh**
 
 ### Questions
 
-**How many times was "github.com" visited where the repository was NOT related to the mimikatz tool?**
+**1. How many times was "github.com" visited where the repository was NOT related to the mimikatz tool?**
+
 Set the matching filter to `githu`, non-matching filter to `mimikatz`, restricted to Chrome only, 
 and counted the resulting rows.
 
@@ -132,16 +138,16 @@ and counted the resulting rows.
 
 Answer: **9**
 
-**How many URLs are displayed when applying the matching filters for "google" and "youtube"?**
+**2. How many URLs are displayed when applying the matching filters for "google" and "youtube"?**
 Answer: **16**
 
-**What is the YouTube channel name of the video streamed?**
+**3. What is the YouTube channel name of the video streamed?**
 
 ![br1](images/br2.png)
 
 Answer: **letsdefend**
 
-**How much time was spent visiting the LetsDefend blog?**
+**4. How much time was spent visiting the LetsDefend blog?**
 
 ![br1](images/br3.png)
 
@@ -239,6 +245,7 @@ SELECT URL FROM 'timeline' LIMIT 0,30
 ### Questions
 
 **1. What's the app_id for the found extension? (starts with "ag...")**
+
 Used profile path `C:\Users\LetsDefend\AppData\Local\Google\Chrome\User Data`, then opened the results 
 in the built-in SQLite browser.
 
@@ -247,14 +254,19 @@ in the built-in SQLite browser.
 Answer: **agohkbfananbebiaphblgcfhcclklfnh**
 
 **2. What's the extension name installed by the user?**
+
 Visible in the same results as above.
+
 Answer: **CC Search**
 
 **3. What's the value of 'key' for the Google website with sequence value of '45'?**
+
 Checked the `storage` table, filtered for sequence value 45.
+
 Answer: **sb_wiz.zpc.gws-wiz.**
 
 **4. Which website (domain) was deleted from history?**
+
 Checked the `timeline` table filtered for type `characteristic` (i.e., a Site Characteristics MD5 match recovered from a deleted entry).
 
 ![](images/br6.png)
