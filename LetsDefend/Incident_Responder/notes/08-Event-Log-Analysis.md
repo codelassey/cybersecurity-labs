@@ -170,7 +170,7 @@ Answer: **3.15.195.136**
 
 **Task Scheduler** automates recurring or triggered actions. Attackers abuse it to: run malicious code, modify existing tasks to change behavior stealthily, maintain persistence, or run tasks with elevated privileges.
 
-> ⚠️ Scheduled task events are **not logged in Security logs by default** - must be enabled via Group Policy Object (GPO). Highly recommended in corporate/AD environments.
+> Scheduled task events are **not logged in Security logs by default** - must be enabled via Group Policy Object (GPO). Highly recommended in corporate/AD environments.
 
 **Even if a task is later deleted by the attacker, the creation event itself often still remains in the logs** - making this a powerful way to find evidence of past intrusions that have since been "cleaned up."
 
