@@ -98,7 +98,7 @@ Overview of the key artifacts and what each reveals. (Full path table consolidat
 
 ### Questions
 
-> ⚠️ Lab note: don't open Chrome during these labs (it can modify the evidence) - use Edge instead.
+> Lab note: don't open Chrome during these labs (it can modify the evidence) - use Edge instead.
 
 **What's the size of the favicon database?**
 Navigated to `C:\Users\LetsDefend\AppData\Local\Google\Chrome\User Data\Default` and checked the Favicons file properties.
@@ -327,7 +327,7 @@ Answer: **linkedin.com**
 | **Search History / Visited Websites** | `...\Default\History` | `...\Profiles\[folder]\places.sqlite` | `...\Default\History` | `...\Opera Stable\History` |
 | **Downloads** | `...\Default\History` (downloads / downloads_url_chains tables) | `...\Profiles\[folder]\places.sqlite` | `...\Default\History` | `...\Opera Stable\History` |
 | **Cookies** | `...\Default\Network\Cookies` | `...\Profiles\[folder]\cookies.sqlite` | `...\Default\Network\Cookies` | `...\Opera Stable\Network\Cookies` |
-| **Cache** | `...\Default\Cache\Cache_Data` | `...\Profiles\[folder]\webappsstore.sqlite` | `...\Default\Cache\Cache_Data` | `...\Opera Stable\Cache\Cache_Data` (⚠️ under `\Local\`, unlike rest of Opera data which is under `\Roaming\`) |
+| **Cache** | `...\Default\Cache\Cache_Data` | `...\Profiles\[folder]\webappsstore.sqlite` | `...\Default\Cache\Cache_Data` | `...\Opera Stable\Cache\Cache_Data` (under `\Local\`, unlike rest of Opera data which is under `\Roaming\`) |
 | **Bookmarks** | `...\Default\Bookmarks` (JSON) | `...\Profiles\[folder]\places.sqlite` | `...\Default\Bookmarks` (JSON) | `...\Opera Stable\Bookmarks` |
 | **Favicons** | `...\Default\Favicons` | `...\Profiles\[folder]\favicons.sqlite` | `...\Default\Favicons` | `...\Opera Stable\Favicons` |
 | **Sessions** | `...\Default\Sessions\*` | `...\Profiles\[folder]\sessionstore.jsonlz4` and `\sessionstore-backups\*` | `...\Default\Sessions\*` | `...\Opera Stable\Sessions\*` |
