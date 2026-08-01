@@ -16,6 +16,8 @@ log file for this challenge.
 
 ![](images/asp1.png)
 
+---
+
 ## Questions
 
 ### While reviewing the logs, Janice identified suspicious Kerberos ticket requests, potentially indicating an AS-REP attack. What is the exact time this attack occurred?
@@ -38,11 +40,15 @@ to 24hr format.. 2pm becoming 14
 
 Ans: 2024-10-05 14:42:44
 
+---
+
 ### What user account did the attacker target during this Kerberos attack?
 
 For this, it's the same account name I found earlier on
 
 Ans: Corrado
+
+---
 
 ### What is the SID associated with the targeted user account?
 
@@ -51,6 +57,7 @@ the answer needed is the value in the User ID field of the event and not the Ser
 
 Ans: S-1-5-21-3079141193-1468241477-2901848075-1108
 
+---
 
 ### What encryption algorithm was used in this Kerberos ticket request?
 
@@ -59,11 +66,15 @@ used in modern servers as default.
 
 Ans: rc4
 
+---
+
 ### What is the IP and port number that was used to request the ticket?
 
 This was also observed in the event log found from the first question.
 
 Ans: 192.168.110.129:49684
+
+---
 
 ### The attacker managed to crack the hash and used it to log into the compromised machine. When was their first logon attempt?
 
@@ -93,6 +104,8 @@ if you are reading this writeup from my `medium`
 ![](images/asp4.png)
 
 Ans: 2024-10-05 14:48:58
+
+---
 
 ### Once inside, the attacker began exploring the system. What was the first command they executed?
 
@@ -131,6 +144,8 @@ We know what whoami does right?? Uhuh, so the attacker's first command executed.
 ![](images/asp7.png)
 
 Ans: whoami
+
+---
 
 ### When did the attacker execute this command exactly?
 
