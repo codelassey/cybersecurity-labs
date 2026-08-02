@@ -215,7 +215,7 @@ Each Jump List entry stores timestamps indicating when the associated file was o
 
 Reviewing the timestamp shows that the employee PII file was opened at:
 
-![](images/cha10.png)
+![](images/cha11.png)
 
 **Answer**
 
