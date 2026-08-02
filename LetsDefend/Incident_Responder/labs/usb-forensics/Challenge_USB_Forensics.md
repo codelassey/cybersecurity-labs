@@ -32,7 +32,7 @@ C:\Windows\System32\Config\SYSTEM
 
 But for this challenege purposes, located in the path as shown in the screenshot below..
 
-![](images/ch1.png)
+![](images/cha1.png)
 
 When investigating USB activity, there are two registry locations that are commonly encountered:
 
