@@ -186,12 +186,12 @@ Download: `https://usbdetective.com/community-download/`
 
 **Q1. Which of the following registry keys holds the most important data related to USB devices from a forensic standpoint?**
 - HKCU\SYSTEM\CurrentControlSet\Enum\USBSTOR
-- **HKLM\SYSTEM\CurrentControlSet\Enum\USBSTOR ✓**
+- **HKLM\SYSTEM\CurrentControlSet\Enum\USBSTOR(correct)**
 - HKLM\SYSTEM\CurrentControlSet\Enum\USB
 - HKCU\SYSTEM\CurrentControlSet\Enum\USB
 
 **Q2. Which of the following registry keys holds the timestamp indicating the disconnection of the USB device from the system?**
-- **0066 ✓**
+- **0066(correct)**
 - 0003
 - 0064
 - 0065
@@ -200,10 +200,10 @@ Download: `https://usbdetective.com/community-download/`
 - KernelPnP Log Event ID 400
 - Partition Log Event ID 1006
 - KernelPnP Log Event ID 410
-- **NTFS Log Event ID 142 ✓**
+- **NTFS Log Event ID 142(correct)**
 
 **Q4. Identify one of the correct registry paths for shellbags.**
-- **USRCLASS.DAT\Local Settings\Software\Microsoft\Windows\Shell\Bags ✓**
+- **USRCLASS.DAT\Local Settings\Software\Microsoft\Windows\Shell\Bags(correct)**
 - USRCLASS.DAT\Local Settings\Software\Microsoft\Windows\CurrentVersion\ShellBags
 - USRCLASS.DAT\Local Settings\Software\Microsoft\Windows\ShellBagsMRU
 - USRCLASS.DAT\Local Settings\Software\Microsoft\Windows\Shell\BagsMRU
@@ -211,7 +211,7 @@ Download: `https://usbdetective.com/community-download/`
 **Q5. Which is the correct path to CustomDestination Jumplists?**
 - C:\%UserProfile%\AppData\Roaming\Microsoft\Windows\CurrentVersion\Recent\CustomDestinations
 - C:\%UserProfile%\AppData\Local\Microsoft\Windows\Recent\CustomDestinations
-- **C:\%UserProfile%\AppData\Roaming\Microsoft\Windows\Recent\CustomDestinations ✓**
+- **C:\%UserProfile%\AppData\Roaming\Microsoft\Windows\Recent\CustomDestinations(correct)**
 - C:\%UserProfile%\AppData\Roaming\MicrosoftNT\Windows\Recent\CustomDestinations
 
 ---
