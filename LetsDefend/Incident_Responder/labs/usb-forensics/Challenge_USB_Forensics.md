@@ -225,7 +225,7 @@ Reviewing the timestamp shows that the employee PII file was opened at:
 This represents the final significant event in our investigation and provides strong evidence that the insider 
 accessed sensitive employee information stored on the USB device.
 
-
+![](images/cha12.png)
 
 ---
 
@@ -261,3 +261,4 @@ Together, these artifacts provide a clear forensic timeline demonstrating that t
 sensitive employee payroll data, supporting the investigation into the suspected insider data leak.
 
 Peace.
+
