@@ -36,8 +36,8 @@ But for this challenege purposes, located in the path as shown in the screenshot
 
 When investigating USB activity, there are two registry locations that are commonly encountered:
 
-- **USB** — Stores information about every USB device connected to the computer, including keyboards, mice, webcams, and storage devices.
-- **USBSTOR** — Specifically stores information about USB mass storage devices such as flash drives and external hard drives.
+- **USB** - Stores information about every USB device connected to the computer, including keyboards, mice, webcams, and storage devices.
+- **USBSTOR** - Specifically stores information about USB mass storage devices such as flash drives and external hard drives.
 
 Since we're investigating a USB storage device, we focus on the **USBSTOR** key.
 
@@ -259,3 +259,5 @@ the application used to view it.
 
 Together, these artifacts provide a clear forensic timeline demonstrating that the USB device was used to access 
 sensitive employee payroll data, supporting the investigation into the suspected insider data leak.
+
+Peace.
