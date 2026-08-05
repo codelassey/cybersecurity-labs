@@ -336,6 +336,8 @@ A completed incident should produce:
 
 ---
 
+![](images/h_guide.png)
+
 # Quick Revision
 
 | Principle | Why it matters |
