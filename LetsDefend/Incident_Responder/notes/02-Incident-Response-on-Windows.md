@@ -258,7 +258,7 @@ Deploy EDR agents across all systems for centralized monitoring and detection
 - Document everything for lessons learned
 - The tool doesn't matter as much as knowing what to look for
 
-
+![](images/windows_ir_badge.png)
 
 
 
