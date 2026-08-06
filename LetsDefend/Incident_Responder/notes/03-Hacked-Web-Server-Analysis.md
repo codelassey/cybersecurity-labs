@@ -374,6 +374,8 @@ Broader scan across common webshell functions:
 grep -RPn "(passthru|shell_exec|system|phpinfo|base64_decode|chmod|mkdir|fopen|fclose|readfile|php_uname|eval) *\(" /var/www
 ```
 
+---
+
 ### Practice Questions
 
 **1. There is a PHP shell on the server. What is the filename of this shell?**
@@ -404,6 +406,8 @@ Attackers use several methods to evade detection/firewalls:
 
 When hunting hidden shells, also scan for `exif_read_data()` and `preg_replace()` usage, in addition to the standard function list above.
 
+---
+
 ### WordPress Compromise Walkthrough
 Full post-compromise analysis of a hacked WordPress server:
 
@@ -432,3 +436,6 @@ Instead of the default 404 page, the attacker had modified the custom 404 error 
 - Understanding common attack vectors (SQLi, XSS, CSRF, traversal, RCE, shell uploads) is a prerequisite for spotting them in logs.
 - Vulnerabilities can originate from the web server, the application server, the programming language, or the application itself.
 - Keeping all components (OS, web server, app server, language runtime, CMS/plugins) updated, and avoiding default/reused credentials, closes the majority of the attack paths described above.
+
+![](images/hacked_web_server_badge.png)
+
