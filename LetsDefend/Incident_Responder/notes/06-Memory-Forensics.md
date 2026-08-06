@@ -265,8 +265,11 @@ Used the netscan plugin, filtering by the process actually handling the DLL exec
 ```bash
 python3 ~/Desktop/Tools/volatility3/vol.py -f ~/Desktop/QuestionFiles/DLLInjection-Case3.mem windows.netscan | grep rundll32
 ```
+Answer: 1234
 
 **4. What would be the Volatility 3 command to dump hashes from LSASS?** *(Answer format: `python3 vol.py -f memory.dump XXX.XXX`)*
 ```bash
 python3 vol.py -f memory.dump windows.hashdump
 ```
+
+![](images/memory_forensics_badge.png)
