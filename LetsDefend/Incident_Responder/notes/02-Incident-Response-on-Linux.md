@@ -691,3 +691,5 @@ Using `journalctl -u cron` command, I saw the reverse shell added to crontab
 I used the find command below which returned returned the authorized key files for all users
 ![linux1](images/linux6.png)
 
+
+![](images/linux_ir.png)
