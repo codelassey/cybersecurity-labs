@@ -203,15 +203,15 @@ Answer: **ffd210b3-5770-45e2-af05-538a4ada5112**
 
 **3. What's the fourth top visited site? (Full URL)**
 Loaded the `Top Sites` database and looked at the row where `urlrank = 3` (0-indexed, so rank 3 = 4th site).
-Answer: **https://www.youtube.com/**
+Answer: `https://www.youtube.com/`
 
 **4. What's the favicon URL for YouTube according to the evidence found?**
 Checked the `favicon` table under the Favicons database.
-Answer: **https://www.youtube.com/s/desktop/25bf5aae/img/favicon_32x32.png**
+Answer: `https://www.youtube.com/s/desktop/25bf5aae/img/favicon_32x32.png`
 
 **5. What is the email address of the user?**
 Checked the `autofill` table in the Web Data database.
-Answer: **letsdefendisawesome@letsdefend.io**
+Answer: `letsdefendisawesome@letsdefend.io`
 
 ---
 
@@ -329,6 +329,8 @@ Answer: **linkedin.com**
 
 ---
 
+![](images/browser_forensics_done.png)
+
 ## 8. Appendix: Browser Forensics Cheat Sheet
 
 ### Artifact Paths by Browser
@@ -382,3 +384,4 @@ Answer: **linkedin.com**
 4. **Don't assume history = truth** - cross-check Favicons, Top Sites, Sessions, and Site Characteristics (via Hindsight) for evidence that survives history deletion.
 5. **Check Extensions** whenever malware or a suspicious redirect/behavior is involved - supply-chain-compromised extensions are an easy blind spot.
 6. **Correlate timestamps** across artifacts (downloads, cookies, form autofill) to build a reliable, evidence-backed timeline.
+
