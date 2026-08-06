@@ -482,8 +482,8 @@ Ans: 192.168.230.129
 **Q1.** Which of the following is the default port for the Kerberos protocol?
 - TCP 888
 - UDP 888
-- TCP 88 (correct)
-- UDP 88
+- TCP 88 
+- UDP 88 (correct)
 
 **Q2.** Which entity is responsible for managing Kerberos tickets and service tickets?
 - Service Principal Name
