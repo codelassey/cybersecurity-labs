@@ -551,3 +551,6 @@ Data Impact:
 - MITRE ATT&CK Techniques
 - Detection Rules
 - Case Notes
+
+
+![](images/reporter_badge.png)
