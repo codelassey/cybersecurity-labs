@@ -27,6 +27,7 @@
 7. [Acquisition and Triage of Disks Using Autopsy](#7-acquisition-and-triage-of-disks-using-autopsy)
    - Key features
    - Basic workflow
+8. [Quiz](#quiz)
 
 ---
 
@@ -246,3 +247,61 @@ Located the full service name under the **Windows Services** tab.
 5. **Live Triage Drive** feature - sets up Autopsy on a removable drive (e.g. USB) with a ready-to-run triage script, letting analysts plug in and triage a machine automatically without manual setup each time.
 
 *(This lesson was an introductory overview - deeper Autopsy analysis features are covered in a separate, more advanced course.)*
+
+QUIZ
+
+1. What is Forensic Acquisition?
+- A forensic image is a bit-by-bit copy of a storage device (correct)
+- A forensic image is a functional copy of a storage device
+- A forensic image is a copy of the storage device's operating system
+- A forensic image is the physical harddrive of the storage
+
+2. What is the purpose of hashing in forensic acquisition?
+- To compress the data
+- To encrypt the data
+- To ensure the integrity of the original data (correct)
+- To identify duplicate files
+
+3. What is the purpose of a write-blocker in forensic acquisition?
+- To compress the original storage device
+- To allow for modifications to the original storage device
+- To encrypt the original storage device
+- To prevent any writes to the original storage device
+
+4. Which data source should be acquired first before others?
+- Disk
+- Memory (correct)
+- Event Logs
+- Network Packets
+
+5. What extensions does FTK imager save an image as by default?
+- raw
+- image
+- ad1 (correct)
+- iso
+
+6. What is the name of KAPE Target made by KAPE developers?
+- KapeAcquisition
+- KapeTarget
+- KapeTriage (correct)
+- KapeCollection
+
+7. FireEye RedLine collector script is a _____
+- Batch Script (correct)
+- Powershell Script
+- Python Script
+- Java Script
+
+8. Autopsy ingest module to collect any found Email Addresses is named:
+- Email Scanner
+- Email Searcher
+- Email Parser (correct)
+- Email Hunter
+
+9. The most recommended way to acquire forensic data is through ...
+- Running tools from a USB (correct)
+- Running tools from the machine under investigation
+- Running tools remotely
+- Physically acquiring the Hard Drive
+
+![](images/aquisitioner_badge.png)
