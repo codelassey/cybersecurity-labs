@@ -449,6 +449,10 @@ Answer: `pickerhost.exe`
 
 ---
 
+![done_course](images/win_reg_for_course.png)
+
+---
+
 ## 11. Appendix: Key Paths & Tools Reference
 
 Quick-reference tables consolidating the registry locations and tools covered throughout this course, with a focus on what each one actually tells an incident responder during an investigation.
