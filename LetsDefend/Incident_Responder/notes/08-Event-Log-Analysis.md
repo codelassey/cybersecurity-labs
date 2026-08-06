@@ -1,4 +1,4 @@
-# LetsDefend: Event Log Analysis Notes
+# LetsDefend Incident Responder Path: Event Log Analysis Course Notes
 
 ## Table of Contents
 
@@ -25,8 +25,10 @@
    - Questions
 9. [Windows Defender Event Logs](#9-windows-defender-event-logs)
    - Questions
-10. [Quiz](#10-quiz)
-11. [Appendix: Event ID Cheat Sheet](#11-appendix-event-id-cheat-sheet)
+10. [PowerShell Command Execution Event Logs](#10-powershell-command-execution-event-logs)
+    - Question
+11. [Quiz](#11-quiz)
+12. [Appendix: Event ID Cheat Sheet](#12-appendix-event-id-cheat-sheet)
 
 ---
 
@@ -40,7 +42,7 @@
   - **System** - hardware states, drivers, etc.
   - **Setup** - OS installation events (and Active Directory events on domain controllers)
   - **Forwarded Events** - logs forwarded from other machines on the network
-- **Application and Services Logs** - a separate category with detailed per-application logs (native or user-installed), mostly organized under `Microsoft → Windows` (e.g., Defender, Firewall, RDP logs).
+- **Application and Services Logs** - a separate category with detailed per-application logs (native or user-installed), mostly organized under `Microsoft -> Windows` (e.g., Defender, Firewall, RDP logs).
 - **Event ID** - a unique numerical identifier for a specific event type (e.g., `4624` = successful logon). Used for filtering/organizing events.
 - **Event types/levels:**
   - **Information** - operation completed successfully
@@ -59,7 +61,7 @@ Native GUI tool (search "Event Viewer" in Windows search).
 - **Windows Logs** section holds Security, Application, System, etc.
 - Each event row shows: level, date/time, source, Event ID, and task category.
 - Clicking an event shows full details (General view or Details view - Friendly/XML).
-- **Filtering (Action → Filter Current Log):**
+- **Filtering (Action -> Filter Current Log):**
   - Filter by one or more **Event IDs** (comma-separated for multiple)
   - Filter by **date/time range** (predefined or custom), combinable with Event ID filters
   - **Clear Filter** removes filters; **never click "Clear Log"** - that permanently deletes events from the system
@@ -98,7 +100,9 @@ Get-WinEvent -LogName System | Where-Object {$_.ProviderName -Match 'Service Con
 ### Question
 
 **How many events were recorded in the System log between 5 PM and 8 PM on 17 September 2021?**
+
 Filtered System logs in Event Viewer for that date/time range; the filtered count was displayed at the top.
+
 Answer: **854**
 
 ---
@@ -118,18 +122,18 @@ Brute-force attacks attempt many password/credential combinations to gain unauth
 
 ### Local/Domain User Authentication
 
-- **Successful logon** → Event ID **4624**, keyword "Audit Success." Check the **Logon Type** field - Type 5 = routine service logon (low interest); Type 2 = physical interactive logon (worth reviewing); Type 3 across multiple hosts = possible lateral movement.
-- **Failed logon** → Event ID **4625**. Shows logon type, account name, and failure reason. Multiple failures in a short window suggest either a forgotten password or a brute-force/guessing attempt - context (logon type, source) determines which.
+- **Successful logon** -> Event ID **4624**, keyword "Audit Success." Check the **Logon Type** field - Type 5 = routine service logon (low interest); Type 2 = physical interactive logon (worth reviewing); Type 3 across multiple hosts = possible lateral movement.
+- **Failed logon** -> Event ID **4625**. Shows logon type, account name, and failure reason. Multiple failures in a short window suggest either a forgotten password or a brute-force/guessing attempt - context (logon type, source) determines which.
 
 ### RDP Authentication
 
 RDP is a favorite attacker target for both initial access (internet-facing RDP) and internal lateral movement. Both the **source** machine (initiating RDP) and the **destination** machine (being connected to) generate relevant logs.
 
 **Successful RDP logons:**
-- Also recorded as Event ID 4624 with **Logon Type 10** in Security logs, but cleaner to check: `Applications and Services Logs → Microsoft → Windows → TerminalServices-RemoteConnectionManager → Operational`, **Event ID 1149** - shows the source IP/account of the RDP connection. Useful for identifying other potentially compromised machines that initiated a lateral RDP session.
+- Also recorded as Event ID 4624 with **Logon Type 10** in Security logs, but cleaner to check: `Applications and Services Logs -> Microsoft -> Windows -> TerminalServices-RemoteConnectionManager -> Operational`, **Event ID 1149** - shows the source IP/account of the RDP connection. Useful for identifying other potentially compromised machines that initiated a lateral RDP session.
 
 **Tracing lateral movement from the source machine:**
-- On the machine that *initiated* an outbound RDP session: `Applications and Services Logs → Microsoft → Windows → TerminalServices-ClientActiveXcore → Microsoft-Windows-TerminalServices-RDPClient/Operational`, **Event ID 1102** - shows the destination server IP (but not success/failure).
+- On the machine that *initiated* an outbound RDP session: `Applications and Services Logs -> Microsoft -> Windows -> TerminalServices-ClientActiveXcore -> Microsoft-Windows-TerminalServices-RDPClient/Operational`, **Event ID 1102** - shows the destination server IP (but not success/failure).
 - Cross-reference with Security log **Event ID 4648** at the same timestamp to see the target account and destination domain used to confirm the connection attempt.
 
 **Failed RDP attempts:**
@@ -145,23 +149,33 @@ RDP is a favorite attacker target for both initial access (internet-facing RDP) 
 ### Questions
 
 **1. There was a failed brute force attempt on RDP service. How many attempts were made?**
+
 Filtered Security logs for Event ID 4625 (any time range), narrowed to events around January 13th, and focused specifically on **Logon Type 3** (network) failures.
+
 Answer: **6**
 
 **2. What's the IP Address of the attacker who attempted the brute-force attack?**
-Checked `TerminalServices-ClientActiveXcore → Microsoft-Windows-TerminalServices-RDPClient/Operational`, filtered between 3–4 PM on Jan 13, 2023, and found the successful login (Event ID 1149) right after the brute-force attempts.
+
+Checked `TerminalServices-ClientActiveXcore -> Microsoft-Windows-TerminalServices-RDPClient/Operational`, filtered between 3–4 PM on Jan 13, 2023, and found the successful login (Event ID 1149) right after the brute-force attempts.
+
 Answer: **72.255.51.37**
 
 **3. Which city does the IP originate from?**
+
 Used a WHOIS lookup - confirmed the IP belonged to Cyber Internet Services Pakistan, but WHOIS didn't give a city. Used **AbuseIPDB** instead, which specified the city.
+
 Answer: **Lahore** (Punjab)
 
 **4. At what time was the attacker able to log in via RDP? (Format: same as event logs)**
+
 Read the timestamp directly from the previously identified Event ID 1149.
+
 Answer: **1/13/2023 3:16:32**
 
 **5. The lab machine was used by the attacker to pivot to another internet-facing RDP machine only accessible from certain IPs. What's the IP address of that RDP machine?**
+
 Filtered `TerminalServices-ClientActiveXcore` logs for the incident date and Event ID **1102** (destination server IP for outbound RDP connections). Only one matching event was found: *"The client has initiated a multi-transport connection to the server 3.15.195.136."*
+
 Answer: **3.15.195.136**
 
 ---
@@ -181,7 +195,7 @@ Answer: **3.15.195.136**
 - **4702** - Task updated/modified (same detail as creation - compare against the original creation event to spot what changed)
 - **4699** - Task deleted (task name + deletion time only)
 
-**In Application/Services logs** (`Microsoft → Windows → Task Scheduler → Operational`) - less detailed, but useful if Security log auditing isn't enabled:
+**In Application/Services logs** (`Microsoft -> Windows -> Task Scheduler -> Operational`) - less detailed, but useful if Security log auditing isn't enabled:
 - **106** - Task registered/created (task name only)
 - **140** - Task updated
 - **141** - Task deleted
@@ -192,19 +206,25 @@ Answer: **3.15.195.136**
 ### Questions
 
 **How many scheduled tasks were created by a user account between the incident timeframe (13 January – 14 January 2023)?**
+
 Filtered Security log for Event ID 4698 - 7 total events, 6 within the timeframe, but some of those were created by the system itself (not a user) and were excluded.
+
 Answer: **2**
 
 **What is the task name of the suspicious scheduled task?**
+
 Answer: **Connect_Backend_Server**
 
 **What is the command being executed by the suspicious task?**
+
 Answer: **C:\Users\LetsDefend\Documents\jbi-kkh39\nc64.exe**
 
 **Which port number is the backdoor communicating to?**
+
 Answer: **4444**
 
 **What time is the suspicious task scheduled for?**
+
 Found in the `<StartBoundary>` tag of the event's XML view.
 Answer: **2023-01-14 19:28:13**
 
@@ -227,10 +247,13 @@ If a suspicious binary path is spotted (e.g., a fake "Windows Update" binary sit
 ### Questions
 
 **What's the Service name which was created by a user account between January 13 and 14, 2023?**
+
 Filtered System log for Event ID **7045** within the timeframe - one matching service creation event found.
+
 Answer: **Connect_Backend**
 
 **What's the binary path which will be executed as a Service?**
+
 Answer: **c:\users\LetsDefend\Documents\jbi-kkh39\reverse.exe**
 
 ---
@@ -248,10 +271,13 @@ Attackers create new user accounts to: maintain persistence (a backup login inde
 ### Questions
 
 **1. Which user account was added after 15 November 2022?**
+
 Filtering directly for the specified date returned no results (a platform quirk), so switched the time range to "Anytime" instead, which surfaced the relevant events. Checked Event ID 4720 (creation) before 4732 (group addition).
+
 Answer: **CyberJunkie_SysAdmin** (created 1/13/2023 3:38:46 PM, added to the `users` and `incidentresponders` groups)
 
 **2. In which local group was the user added?**
+
 Answer: **incidentresponders**
 
 ---
@@ -261,7 +287,7 @@ Answer: **incidentresponders**
 Attackers delete or disable event logs to: cover their tracks, disrupt security monitoring, or avoid detection by security teams reviewing logs. Requires **high-level (admin) privileges** to do so.
 
 **Methods attackers use:**
-- Event Viewer → right-click log → "Clear Log" (requires admin rights)
+- Event Viewer -> right-click log -> "Clear Log" (requires admin rights)
 - CLI: `wevtutil.exe cl <logname>` (e.g., `wevtutil.exe cl Security`)
 
 Regardless of method, **clearing a log always generates its own event** - attackers can't clear logs without leaving evidence of having done so.
@@ -280,11 +306,15 @@ Regardless of method, **clearing a log always generates its own event** - attack
 ### Questions
 
 **1. At what time did the firewall event logs get cleared during the incident timeframe (January 13, 2023)?**
+
 Filtered Security logs for Event ID **104** - found two relevant "log cleared" events (Firewall log and RDP RemoteConnectionManager log); isolated the firewall one specifically.
+
 Answer: **1/13/2023 3:42:23**
 
 **2. When was event logging disabled around the incident timeframe (January 13, 2023)?**
+
 Filtered for Event ID **1100** around the incident date - found two service shutdown events.
+
 Answer: **1/13/2023 3:43:52**
 
 ---
@@ -296,7 +326,7 @@ Answer: **1/13/2023 3:43:52**
 **Why attackers tamper with firewall rules:** to allow their C2/backdoor traffic through without restriction (as a persistence backup), or to enable unrestricted data exfiltration.
 
 ### Key Event IDs
-(Located under `Application and Service Logs → Microsoft → Windows → Windows Firewall with Advanced Security → Firewall`)
+(Located under `Application and Service Logs -> Microsoft -> Windows -> Windows Firewall with Advanced Security -> Firewall`)
 
 - **2004** - New firewall rule added. Shows rule name, active status, **direction** (inbound/outbound - outbound rules for unfamiliar apps can indicate a C2 channel), the **application path**, and **protocol**. Note: Windows itself constantly adds routine rules (modifying app = `SYSTEM`, no bound application) - this is expected noise. Look instead for rules tied to a real application path, and check whether the **Modifying Application** is something like `mmc.exe`, `powershell.exe`, or `cmd.exe` - these indicate the rule was added via human/script interaction, not automatic OS behavior. Also watch service-account paths like `\windows\ServiceProfiles\LocalService\` - the true underlying file is usually under the modifying user's own profile path.
 - **2005** - Existing rule modified. Attackers may prefer modifying an existing (less noticeable) rule rather than creating a new one. The **Rule ID stays constant** even if the attacker renames everything else about the rule - use it to trace back to the original 2004 creation event and diff what changed.
@@ -305,6 +335,7 @@ Answer: **1/13/2023 3:43:52**
 ### Questions
 
 **1. What's the rule name which was added by a user on January 13, 2023 between 3pm and 4pm?**
+
 Filtered the Firewall operational log for Event ID **2004** in that window - one matching rule addition found.
 
 ![rule](images/rule.png)
@@ -312,21 +343,29 @@ Filtered the Firewall operational log for Event ID **2004** in that window - one
 Answer: **Allow_Backend_Server_Connection**
 
 **2. What's the network direction configured for the rule?**
+
 Visible in the same event shown above.
+
 Answer: **Outbound**
 
 **3. What's the protocol configured for the rule?**
+
 Answer: **any**
 
 **4. What is the application name for which this firewall rule was added?**
+
 Answer: **reverse.exe**
 
 **5. What's the protocol after the rule is modified/updated?**
+
 Added Event ID **2005** to the filter - protocol was changed to a specific value.
+
 Answer: **TCP**
 
 **6. At what time was the firewall disabled?**
+
 Filtered for Event ID **2003** (firewall disabled).
+
 Answer: **1/13/2023 3:54:31**
 
 ---
@@ -335,7 +374,7 @@ Answer: **1/13/2023 3:54:31**
 
 **Windows Defender** is Windows' built-in antivirus, providing real-time and on-demand scanning. Its logs can reveal historic malware detections tied to an incident - and disabling Defender is frequently one of the first things attackers do after gaining control, to operate without interference.
 
-(Located under `Application and Service Logs → Microsoft → Windows → Windows Defender → Operational`)
+(Located under `Application and Service Logs -> Microsoft -> Windows -> Windows Defender -> Operational`)
 
 ### Key Event IDs
 
@@ -347,23 +386,64 @@ Answer: **1/13/2023 3:54:31**
 ### Questions
 
 **1. What malicious file was detected by Windows Defender after 4 PM on 13 January 2023?**
+
 Filtered Windows Defender operational log for Event ID **1116**.
+
 Answer: **Invoke-Mimikatz.ps1**
 
 **2. What is the category of the malicious file?**
+
 Answer: **trojan**
 
 **3. What action was taken against the malicious file?**
+
 Added Event ID **1117** to the filter.
+
 Answer: **remove**
 
 **4. Which folder was excluded last from the Defender scanner around the time of the incident?**
+
 Added Event ID **5007** to the filter and located the exclusion path in the event description.
+
 Answer: **C:\Users\LetsDefend\Documents**
 
 ---
 
-## 10. Quiz
+## 10. PowerShell Command Execution Event Logs
+
+**PowerShell** is a legitimate, powerful administration tool built into Windows - which is exactly why attackers love it too. It allows arbitrary code execution, access to system resources, and control over other programs, and it's commonly used to bypass security controls (e.g., disabling firewalls/AV), abuse legitimate built-in cmdlets/modules to blend in, and set up persistence via scheduled malicious scripts. Because of how frequently it's abused, monitoring PowerShell activity gives significant visibility into what's actually happening on an endpoint.
+
+**Log location:** `Applications and Services Logs -> Microsoft -> Windows -> PowerShell -> Operational`
+
+### Key Event ID
+
+**Event ID 4104** - Task Category **"Executing a Remote Command"**, Event Level **Verbose**. This is the event that actually records the **command text** that was executed, along with the executing user account and Domain/Computer name.
+
+**Cutting the noise:** a single PowerShell command execution generates many related events in a short window (background pipeline activity). To filter effectively:
+- Filter for **Event ID 4104** + **Event Level "Verbose"** + the incident date/time (if known) - this alone eliminates most of the noise from the "Executing Pipeline" task category, which is just PowerShell's own background processing.
+- Even without a known incident time, the ID + Level filter combination is enough to get a manageable result set.
+
+**Reading the filtered events:** the actual executed command appears under the text **"Creating Scriptblock text"** in the event whenever a real command was run. The event immediately following it will usually just show the string **"prompt"** instead of a command - this is expected noise (PowerShell logging the prompt reset after each command), so the pattern is to check every *other* event (1st, 3rd, 5th, etc.) rather than every single one, keeping in mind some background/system-triggered PowerShell activity can still appear and slightly break this neat pattern.
+
+**Example walkthrough from the lesson:**
+1. First relevant event -> command: `whoami` - basic initial reconnaissance.
+2. Third relevant event -> command: `Get-LocalUser` - enumerates local user accounts.
+3. Fifth relevant event -> command: `Get-LocalGroup` - enumerates local groups.
+
+None of these are commands a typical legitimate user runs casually - this sequence (`whoami` -> enumerate users -> enumerate groups) is a textbook **post-exploitation enumeration pattern**, consistent with an attacker who just gained initial access and is starting to map out the system for privilege escalation or lateral movement opportunities. If this activity is seen shortly after a known incident time, it strongly supports a confirmed intrusion - and any further malicious tooling (e.g., `mimikatz.exe`) run via PowerShell afterward would also be captured in these same 4104 events, giving direct evidence of attacker tooling.
+
+### Question
+
+**What command was executed after 4:10 PM on 13 January by the attacker as part of internal enumeration?**
+
+Filtered PowerShell Operational logs for Event ID 4104, around the given time, and worked through the "Creating Scriptblock text" entries 
+(skipping the "prompt" noise events in between) to find the next enumeration command in the sequence.
+
+Answer: **Get-LocalGroupMember Administrators**
+
+---
+
+## 11. Quiz
 
 **Q1. Where are the event logs stored in the Windows systems?**
 - C:\Windows\System32\Config\EventLogs
@@ -427,7 +507,7 @@ Answer: **C:\Users\LetsDefend\Documents**
 
 **Q11. If an attacker adds a new firewall rule, which Event ID would you use to filter firewall event logs?**
 - 1004
-- **2004*
+- **2004**
 - 4222
 - 4444
 
@@ -439,7 +519,9 @@ Answer: **C:\Users\LetsDefend\Documents**
 
 ---
 
-## 11. Appendix: Event ID Cheat Sheet
+![](images/event_log_hunter.png)
+
+## 12. Appendix: Event ID Cheat Sheet
 
 A consolidated quick-reference for every Event ID covered in this course, organized by category, with the log location and what it tells an incident responder.
 
@@ -451,7 +533,7 @@ A consolidated quick-reference for every Event ID covered in this course, organi
 | 4625 | Security | Failed logon attempt | Multiple failures in a short window = possible brute-force. Combine with logon type (e.g., Type 3 across many hosts = lateral movement attempt). |
 | 4648 | Security | Explicit credential logon (e.g., outbound RDP) | Confirms the target account/domain used when connecting out to another machine - pairs with RDPClient Event ID 1102. |
 | 1149 | TerminalServices-RemoteConnectionManager/Operational | Successful RDP connection | Shows source IP/account of an inbound RDP session - key for tracing lateral movement *into* a host. |
-| 1102 | TerminalServices-ClientActiveXcore → RDPClient/Operational | RDP client initiated outbound connection | Shows the destination server IP for an *outbound* RDP session - key for tracing where a compromised host moved *to*. |
+| 1102 | TerminalServices-ClientActiveXcore -> RDPClient/Operational | RDP client initiated outbound connection | Shows the destination server IP for an *outbound* RDP session - key for tracing where a compromised host moved *to*. |
 | 261 | TerminalServices-RemoteConnectionManager/Operational | TCP connection received on RDP port | Not proof of an auth attempt (could be a port scan) - but absence of a following 1149 suggests a failed login attempt. |
 
 ### Scheduled Tasks
@@ -504,8 +586,8 @@ A consolidated quick-reference for every Event ID covered in this course, organi
 | 5001 | Windows Defender/Operational | Real-Time Protection disabled | No extra detail - the event alone is the red flag. Attackers disable this to move tools in undetected. |
 | 5007 | Windows Defender/Operational | Configuration change (incl. exclusions) | Check the event description for `HKLM\SOFTWARE\Microsoft\Windows Defender\Exclusions\Paths\` to confirm it's specifically an exclusion, then read the path that follows. |
 
-### PowerShell (referenced in Quiz Q12)
+### PowerShell
 
 | Event ID | Log Location | Meaning | IR Value |
 |---|---|---|---|
-| 4104 | Microsoft-Windows-PowerShell/Operational | Script block logging (PowerShell execution) | Captures the actual PowerShell code executed - one of the most valuable artifacts for reconstructing attacker commands, especially against obfuscated scripts. |
+| 4104 | Microsoft-Windows-PowerShell/Operational | Script block logging (PowerShell execution), Task Category "Executing a Remote Command", Level "Verbose" | Captures the actual PowerShell code executed under "Creating Scriptblock text" - one of the most valuable artifacts for reconstructing attacker commands, especially against obfuscated scripts. Filter by ID + Verbose level to cut background pipeline noise; skip the "prompt"-only events that follow each real command. |
