@@ -158,7 +158,7 @@ before. So I used the command:
 Then, I opened the new `security_1_tony.csv` within timeline explorer. After, I filtered for the attacker's IP: `192.168.110.135` which returned
 a couple of events where I hid some columns that are not of importance to us so we can at least giving a solid overall timeline of the attacker on that particular system.
 
-![](images/ker14.png)
+![](images/ker15.png)
 
 As we can see from the screenshot above, the first event is actually the first time of interaction, which was a failed login attempt to the 
 account: Corrado. This was followed by a couple more failed login attempts to Corrado again and to SOPRANOS-DC$ (a computer account), until 
