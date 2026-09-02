@@ -17,7 +17,7 @@
 | **Alert Trigger** | Request body contains `whoami` string |
 | **Device Action** | Allowed |
 
-![alert_details](imaages/soc21.png)
+![alert_details](images/soc21.png)
 
 ---
 
@@ -40,7 +40,7 @@ To gain a broader picture of the activity, I filtered the logs using the source 
 
 My goal was to determine whether the attacker was targeting multiple systems or focusing on a single host.
 
-![log_analysis](imaages/soc22.png)
+![log_analysis](images/soc22.png)
 
 The search returned **five events** occurring between **04:11 AM and 04:15 AM** on **February 28, 2022**.
 
@@ -108,7 +108,7 @@ I switched my focus to the **Endpoint Security** dashboard and reviewed the term
 
 The terminal history confirmed exactly what I suspected.
 
-![endpoint](imaages/soc23.png)
+![endpoint](images/soc23.png)
 
 The same commands observed in the HTTP requests appeared in the operating system's command history, and the timestamps aligned perfectly with those recorded in the web logs.
 
@@ -138,7 +138,7 @@ With containment underway, I gathered additional intelligence about the attackin
 
 ## WHOIS
 
-![whois](imaages/soc24.png)
+![whois](images/soc24.png)
 
 WHOIS identified the source IP as belonging to:
 
@@ -148,7 +148,7 @@ WHOIS identified the source IP as belonging to:
 
 ## VirusTotal
 
-![virustotal](imaages/soc25.png)
+![virustotal](images/soc25.png)
 
 I then checked the IP address on **VirusTotal**.
 
@@ -208,7 +208,7 @@ Taken together, there was no reasonable explanation other than a genuine comprom
 
 Although the attack already appeared legitimate, I still wanted to verify that it wasn't part of an authorized penetration test.
 
-![email](imaages/soc26.png)
+![email](images/soc26.png)
 
 I searched the email records for notifications regarding planned assessments before **February 2022**, focusing on:
 
