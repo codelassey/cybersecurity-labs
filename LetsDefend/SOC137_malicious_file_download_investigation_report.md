@@ -10,6 +10,8 @@
 **Category:** Malware
 
 ---
+![](https://i.imgur.com/cTwd26o.png)
+---
 
 ## Overview
 
