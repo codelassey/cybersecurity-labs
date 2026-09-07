@@ -10,7 +10,7 @@ Our friend "Dee" was looking for a job in Tanta, but it seems she was hacked by 
 Given the scenario we're dealing with, I'm pretty sure this challenge would bbe closer to performing browser forensics and malicious document analysis. But let's see..
 
 ### 1. What is the MD5 hash of the malicious document?
-So in forensics, basically the first thing an investigaator does.. to keep the integrity of the evidence and too also maintain the chain of custody is to first acquire an image of the device as evidence. Peforming analysis on the live evidence is strongly prohibited
+In digital forensics, one of the first steps an investigator takes is to acquire a forensic image of the device or storage media. This helps preserve the integrity of the original evidence and supports a proper chain of custody. Analysis should generally be performed on a verified forensic copy rather than the original or live evidence, as interacting directly with the original can alter or contaminate the evidence.
 
 For this reason, we realise LetsDefend already provided us with an image of the Dee's device. So basically.. we gon rely on that for investigation.
 
