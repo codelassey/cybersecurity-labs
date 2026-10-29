@@ -118,4 +118,4 @@ I successfully identified a valid username by comparing differences in server re
 
 ## Reflection
 
-This lab demonstrates how subtle differences in error messages and response lengths can reveal whether a username exists. Once a valid username is identified, an attacker can focus password-guessing attempts on that account. Applications should use consistent authentication error messages, implement rate limiting and progressive delays, and consider additional protections against automated login attempts.
+This lab demonstrated how subtle differences in error messages and response lengths could reveal whether a username exists. Once a valid username is identified, an attacker can focus password-guessing attempts on that account. Applications should use consistent authentication error messages, implement rate limiting and progressive delays, and consider additional protections against automated login attempts.
