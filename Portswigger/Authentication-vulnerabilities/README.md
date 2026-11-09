@@ -8,17 +8,17 @@ This repository documents my practical exercises from PortSwigger Web Security A
 
 | # | Lab | Key Vulnerability |
 |---|---|---|
-| 1 | [Username Enumeration via Different Responses](./username-enumeration-via-different-responses.md) | Identifying valid usernames through inconsistent error messages |
-| 2 | [Username Enumeration via Subtly Different Responses](./username-enumeration-via-subtly-different-responses.md) | Detecting subtle response differences using Grep - Extract |
-| 3 | [Username Enumeration via Response Timing](./username-enumeration-via-response-timing.md) | Exploiting response-time differences to enumerate usernames |
-| 4 | [Broken Brute-Force Protection, IP Block](./broken-brute-force-protection-ip-block.md) | Bypassing brute-force protection through authentication logic flaws |
-| 5 | [2FA Simple Bypass](./2fa-simple-bypass.md) | Accessing an account without completing the second authentication step |
-| 6 | [2FA Broken Logic](./2fa-broken-logic.md) | Exploiting flaws in multi-factor authentication verification |
-| 7 | [Brute-Forcing a Stay-Logged-In Cookie](./brute-forcing-a-stay-logged-in-cookie.md) | Recovering passwords from predictable authentication cookies |
-| 8 | [Offline Password Cracking](./offline-password-cracking.md) | Combining stored XSS and weak cookie construction to recover a password |
-| 9 | [Password Reset Broken Logic](./password-reset-broken-logic.md) | Reusing a password-reset token to change another user's password |
-| 10 | [Password Reset Poisoning via Middleware](./password-reset-poisoning-via-middleware.md) | Manipulating `X-Forwarded-Host` to capture password-reset tokens |
-| 11 | [Password Brute-Force via Password Change](./password-brute-force-via-password-change.md) | Exploiting password-change responses to brute-force credentials |
+| 1 | [Username Enumeration via Different Responses](username-enumeration-via-different-responses.md) | Identifying valid usernames through inconsistent error messages |
+| 2 | [Username Enumeration via Subtly Different Responses](username-enumeration-via-subtly-different-responses.md) | Detecting subtle response differences using Grep - Extract |
+| 3 | [Username Enumeration via Response Timing](username-enumeration-via-response-timing.md) | Exploiting response-time differences to enumerate usernames |
+| 4 | [Broken Brute-Force Protection, IP Block](broken-brute-force-protection-ip-block.md) | Bypassing brute-force protection through authentication logic flaws |
+| 5 | [2FA Simple Bypass](2fa-simple-bypass.md) | Accessing an account without completing the second authentication step |
+| 6 | [2FA Broken Logic](2fa-broken-logic.md) | Exploiting flaws in multi-factor authentication verification |
+| 7 | [Brute-Forcing a Stay-Logged-In Cookie](brute-forcing-a-stay-logged-in-cookie.md) | Recovering passwords from predictable authentication cookies |
+| 8 | [Offline Password Cracking](offline-password-cracking.md) | Combining stored XSS and weak cookie construction to recover a password |
+| 9 | [Password Reset Broken Logic](password-reset-broken-logic.md) | Reusing a password-reset token to change another user's password |
+| 10 | [Password Reset Poisoning via Middleware](password-reset-poisoning-via-middleware.md) | Manipulating `X-Forwarded-Host` to capture password-reset tokens |
+| 11 | [Password Brute-Force via Password Change](password-brute-force-via-password-change.md) | Exploiting password-change responses to brute-force credentials |
 
 ## Key Takeaways
 
