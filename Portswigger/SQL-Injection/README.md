@@ -139,3 +139,5 @@ Completing these labs has given me a much better understanding of how SQL inject
 I learned that successful exploitation often involves a process of investigation: identifying the injection point, understanding the underlying query, determining the database behavior, and selecting the appropriate technique to retrieve information.
 
 These labs have fr strengthened my understanding of web application security and given me practical experience identifying and exploiting SQL injection vulnerabilities.
+
+![](images/img116.jpg)
